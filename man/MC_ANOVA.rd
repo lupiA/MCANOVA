@@ -1,11 +1,11 @@
 \name{MC_ANOVA}
 \alias{MC_ANOVA}
-\title{Performs MC_ANOVA}
+\title{Performs MC-ANOVA}
 \description{
     This function predicts genetic values drawn from the core using SNPs not in the core and those in the core that are not randomly chosen to be QTL.
 }
 \usage{
-  MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, ...)
+MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm)
 }
 \arguments{
     \item{X}{
