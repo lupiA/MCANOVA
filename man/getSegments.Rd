@@ -2,7 +2,7 @@
 \alias{getSegments}
 \title{Computes small chromosome segments}
 \description{
-    Calls getSegmentsChr function
+    Calls getSegmentsChr function to compute small chromosome segments
 }
 \usage{
 getSegments(bp, chr, minBPSize = 10e3, minSize = 10, firstSegment = 1, verbose = FALSE)
