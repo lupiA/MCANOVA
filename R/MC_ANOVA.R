@@ -1,7 +1,7 @@
 #' Performs MC-ANOVA
 #'
-#' This function predicts genetic values drawn from the core using SNPs not in the core
-#' and those in the core that are not randomly chosen to be QTL.
+#' @description This function predicts genetic values drawn from the core using SNPs not in the core
+#' and those in the core that are not randomly chosen to be QTL
 #'
 #' @param X 
 #' genotype matrix for group 1
