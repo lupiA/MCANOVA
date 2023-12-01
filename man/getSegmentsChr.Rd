@@ -1,6 +1,9 @@
 \name{getSegmentsChr}
 \alias{getSegmentsChr}
-\title{Computes small chromosome segments within one chromosome.}
+\title{Computes small chromosome segments within one chromosome}
+\description{
+    TODO
+}
 \usage{
   getSegmentsChr(bp, minBPSize = 10e3, minSize = 10, firstSegment = 1)
 }
@@ -13,4 +16,7 @@
     }
     \item{firstSegment}{
     }
+}
+\value{
+    TODO
 }
