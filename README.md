@@ -1,10 +1,12 @@
 # MCANOVA Package
 
-Installation
+# Installation
 To install the development version from Github:
 
+```
 # install.packages("remotes")
 remotes::install_github("lupiA/MCANOVA")
+```
 
 # Cross-Ancestry-Portability
 
