@@ -1,14 +1,31 @@
+#' Performs MC-ANOVA
+#'
+#' This function predicts genetic values drawn from the core using SNPs not in the core
+#' and those in the core that are not randomly chosen to be QTL.
+#'
+#' @param X 
+#' genotype matrix for group 1
+#' @param X2 ...
+#' genotype matrix for group 2
+#' @param core ...
+#' columns of X that represent the core for which RSq is estimated
+#' @param nQTL ...
+#' number of causal loci for the MC simulation
+#' @param nRep ...
+#' number of monte carlo replicates, if null, it is internally determined
+#' @param maxRep ...
+#' maximum number of MC replicates
+#' @param lambda ...
+#' shrinkage parameter
+#' @param sampler ...
+#' the function to be used to sample effects
+#'
+#' @return A matrix with ancestry groups in the rows, MC-ANOVA correlation estimates
+#' in the first column, and Monte Carlo error estimates in the second column
+#'
+#' @export
+
 MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, ...) {
-    # X: genotype matrix for group 1
-    # X2: genotype matrix for group 2
-    # core: columns of X that represent the core for which RSq is estimated
-    # nQTL: number of causal loci for the MC simulation
-    # nRep: number of monte carlo replicates, if null, it is internally determined
-    # maxRep: maximum number of MC replicates
-    # lambda: shrinkage parameter
-    # sampler: the function to be used to sample effects
-    # ...: additional arguments to sampler
-    # This function predicts genetic values drawn from the core using SNPs not in the core and those in the core that are not randomly chosen to be QTL.
 
     pop2 <- !is.null(X2)
     if (pop2) {
