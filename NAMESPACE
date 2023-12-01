@@ -1,4 +1,1 @@
-export(MC_ANOVA)
-export(getSegments)
-export(getSegmentsChr)
-useDynLib("MCANOVA", .registration = TRUE, .fixes = "C_")
+exportPattern("^[[:alpha:]]+")
