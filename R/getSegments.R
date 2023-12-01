@@ -1,3 +1,24 @@
+#' Computes small chromosome segments
+#'
+#' @description Calls getSegmentsChr function to compute small chromosome segments
+#' 
+#' @param bp ...
+#' base pair position
+#' @param chr ...
+#' chromosome
+#' @param minBPSize ...
+#' minimum base pair size for each segment
+#' @param minSize ...
+#' minimum number of SNPs for each segment
+#' @param firstSegment ...
+#' default 1
+#' @param verbose ...
+#' default FALSE
+#'
+#' @return A numeric vector of segment labels corresponding to each marker
+#'
+#' @export
+
 getSegments <- function(bp, chr, minBPSize = 10e3, minSize = 10, firstSegment = 1, verbose = FALSE) {
     p <- length(bp)
     segments <- rep(NA, p)
