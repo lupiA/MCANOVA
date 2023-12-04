@@ -13,15 +13,8 @@ function(input, output, session) {
   
   dat <- reactive({
     if (input$dataset == "Calls SNPs") {
-      if (input$ancestry == "African"){
-        fread("AF_map.csv", data.table = FALSE)
-      } else if (input$ancestry == "Caribbean") {
-        fread("CR_map.csv", data.table = FALSE)
-      } else if (input$ancestry == "East Asian") {
-        fread("EA_map.csv", data.table = FALSE)
-      } else if (input$ancestry == "South Asian") {
-        fread("SA_map.csv", data.table = FALSE)
-      }
+      data_path <- system.file("dat", paste0(input$ancestry, "_map.csv"), package = "MCANOVA")
+      fread(data_path, data.table = FALSE)
     }
   })
   
