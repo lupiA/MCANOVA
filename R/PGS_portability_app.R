@@ -108,11 +108,11 @@ PGS_portability_app <- function() {
       if (input$ancestry == "African"){
         fread(system.file("dat", "AF_map.csv", package = "MCANOVA"), data.table = FALSE)
       } else if (input$ancestry == "Caribbean") {
-        fread(system.file("dat", "AF_map.csv", package = "MCANOVA"), data.table = FALSE)
+        fread(system.file("dat", "CR_map.csv", package = "MCANOVA"), data.table = FALSE)
       } else if (input$ancestry == "East Asian") {
-        fread(system.file("dat", "AF_map.csv", package = "MCANOVA"), data.table = FALSE)
+        fread(system.file("dat", "EA_map.csv", package = "MCANOVA"), data.table = FALSE)
       } else if (input$ancestry == "South Asian") {
-        fread(system.file("dat", "AF_map.csv", package = "MCANOVA"), data.table = FALSE)
+        fread(system.file("dat", "SA_map.csv", package = "MCANOVA"), data.table = FALSE)
       }
     }
     }) 
