@@ -6,7 +6,7 @@
 PGS_portability_app <- function() {
   library(shiny)
   shinyApp(
-    ui = sourceSystem(file.path("inst", "shiny_UI.R"), local = TRUE)$value,
-    server = sourceSystem(file.path("inst", "shiny_server.R"), local = TRUE)$value
+    ui = source(file.path("inst", "shiny_UI.R"), local = TRUE)$value,
+    server = source(file.path("inst", "shiny_server.R"), local = TRUE)$value
   )
 }
