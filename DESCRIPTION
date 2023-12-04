@@ -2,5 +2,8 @@ Package: MCANOVA
 Version: 0.0.1
 License: MIT + file LICENSE
 Title: Package for MC-ANOVA method
-Authors@R: person("Alexa", "Lupi", email = "lupialex@msu.edu",
-    role = c("aut", "cre"))
+Authors@R: person("Alexa", "Lupi", email = "lupialex@msu.edu", role = c("aut", "cre"))
+Imports:
+  shiny,
+  data.table,
+  ggplot2
