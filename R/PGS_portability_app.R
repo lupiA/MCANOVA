@@ -5,7 +5,7 @@
 #' @export
 PGS_portability_app <- function() {
   shinyApp(
-    ui = source("shinyApp/shiny_UI.R", local = TRUE)$value,
-    server = source("shinyApp/shiny_server.R", local = TRUE)$value
+    ui = source("inst/shiny_UI.R", local = TRUE)$value,
+    server = source("inst/shiny_server.R", local = TRUE)$value
   )
 }
