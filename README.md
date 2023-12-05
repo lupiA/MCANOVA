@@ -6,26 +6,32 @@ To install the development version from Github:
 ```
 # install.packages("remotes")
 remotes::install_github("lupiA/MCANOVA")
+library(MCANOVA)
 ```
 
 # Cross-Ancestry-Portability
 
-MC-ANOVA is an extension of HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) that predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/Cross-Population-Portability/blob/main/R/MC-ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
+MC-ANOVA is an extension of HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) that predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/MCANOVA/blob/main/R/MC_ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
 \
 \
-We also provide a function, [getSegments.R](https://github.com/lupiA/Cross-Population-Portability/blob/main/R/getSegments.R), to group SNPs into local segments based on a provided Kbp size (e.g., 10 Kbp) and minimum number of SNPs (e.g., 10 SNPs).
+We also provide a function, [getSegments.R](https://github.com/lupiA/MCANOVA/blob/main/R/getSegments.R), to group SNPs into local segments based on a provided Kbp size (e.g., 10 Kbp) and minimum number of SNPs (e.g., 10 SNPs).
 \
 \
-Finally, we have provided an interactive tool, an [R Shiny App](https://github.com/lupiA/Cross-Population-Portability/blob/main/R-shiny-app), in which users can input a single SNP (base pair [BP] position), range of SNPs (BP positions), or a comma-separated list of SNPs, and the App will output portability and marker information. Users are able to download the main output from the App to a .csv file.
+Finally, we have provided an interactive tool, an [R Shiny App](https://github.com/lupiA/MCANOVA/blob/main/R/PGS_portability_app.R), in which users can input a single SNP (base pair [BP] position), range of SNPs (BP positions), or a comma-separated list of SNPs, and the App will output portability and marker information. The app can be opened by calling the function after installing the MCANOVA package:
+```
+PGS_portability_app()
+```
+Users are able to download the main output from the App to a .csv file.
 
 
 ### Example
 #### Running MC-ANOVA and obtaining portability map
 \
-After downloading the [MC_ANOVA.R](https://github.com/lupiA/Cross-Population-Portability/blob/main/R/MC-ANOVA.R) and [getSegments.R](https://github.com/lupiA/Cross-Population-Portability/blob/main/R/getSegments.R) functions and the [geno_map_example.csv](https://github.com/lupiA/Cross-Population-Portability/blob/main/geno_map_example.csv) file (requires the R package [BGData](https://github.com/QuantGen/BGData/tree/master)):
+This example requires the R package [BGData](https://github.com/QuantGen/BGData/tree/master) which is installed along with the MCANOVA package:
 
 ```
 # Load necessary packages
+remotes::install_github("lupiA/MCANOVA")
 library(MCANOVA)
 library(BGData)
 
@@ -33,7 +39,8 @@ library(BGData)
 set.seed(12345)
 
 # Genotype map
-genotype_map <- read.csv("~/geno_map_example.csv", header = TRUE)
+path <- system.file("dat", package = "MCANOVA")
+genotype_map <- read.csv(paste0(path, "/geno_map_example.csv"), header = TRUE)
 
 # Generate genotypes (100 subjects and 500 SNPs)
 n <- 100
