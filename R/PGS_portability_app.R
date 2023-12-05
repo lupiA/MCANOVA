@@ -23,7 +23,8 @@ PGS_portability_app <- function() {
         uiOutput("ancestry_dropdown"),
         br(),
         radioButtons("input_range", "Marker Input:",
-                     choices = c("Single Marker", "Range of Markers (within chromosome)", "Comma-separated List of SNP RS IDs","Single Gene")
+                     choices = c("Single Marker", "Range of Markers (within chromosome)",
+                     "Comma-separated List of SNP RS IDs","Single Gene")
         ),
         br(),
         conditionalPanel(
@@ -43,17 +44,20 @@ PGS_portability_app <- function() {
           textInput("rs_id", "Enter SNP ID (e.g., rs4422948):")
         ),
         conditionalPanel(
-          condition = "input.input_type == 'Base Pair Position & Chromosome' && input.input_range == 'Single Marker'",
+          condition = "input.input_type == 'Base Pair Position & Chromosome' && 
+              input.input_range == 'Single Marker'",
           numericInput("chromosome_input", "Enter Chromosome:", value = 1),
           numericInput("bp_position", "Enter Base Pair Position:", value = 1)
         ),
         conditionalPanel(
-          condition = "input.input_type2 == 'SNP RS ID' && input.input_range == 'Range of Markers (within chromosome)'",
+          condition = "input.input_type2 == 'SNP RS ID' && input.input_range == 
+              'Range of Markers (within chromosome)'",
           textInput("start_snp_id", "Enter Start SNP ID:"),
           textInput("end_snp_id", "Enter End SNP ID:")
         ),
         conditionalPanel(
-          condition = "input.input_type2 == 'Base Pair Position & Chromosome' && input.input_range == 'Range of Markers (within chromosome)'",
+          condition = "input.input_type2 == 'Base Pair Position & Chromosome' && 
+              input.input_range == 'Range of Markers (within chromosome)'",
           numericInput("chromosome_input2", "Enter Chromosome:", value = 1),
           numericInput("start_bp_position", "Enter Start Base Pair Position:", value = 1),
           numericInput("end_bp_position", "Enter End Base Pair Position:", value = 1)
@@ -107,13 +111,13 @@ PGS_portability_app <- function() {
       path <- system.file("dat", package = "MCANOVA")
       if (input$dataset == "Calls SNPs") {
         if (input$ancestry == "African"){
-          fread("AF_map.csv", data.table = FALSE)
+          fread(paste0(path, "AF_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "Caribbean") {
-          fread("CR_map.csv", data.table = FALSE)
+          fread(paste0(path, "CR_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "East Asian") {
-          fread("EA_map.csv", data.table = FALSE)
+          fread(paste0(path, "EA_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "South Asian") {
-          fread("SA_map.csv", data.table = FALSE)
+          fread(paste0(path, "SA_map.csv"), data.table = FALSE)
         }
       }
     }) 
