@@ -26,6 +26,7 @@ After downloading the [MC_ANOVA.R](https://github.com/lupiA/Cross-Population-Por
 
 ```
 # Load necessary packages
+library(MCANOVA)
 library(BGData)
 
 # Set seed
