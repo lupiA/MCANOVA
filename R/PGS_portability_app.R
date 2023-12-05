@@ -104,17 +104,18 @@ PGS_portability_app <- function() {
     })
     
     dat <- reactive({
-    if (input$dataset == "Calls SNPs") {
-      if (input$ancestry == "African"){
-        fread(system.file("dat", "AF_map.csv", package = "MCANOVA"), data.table = FALSE)
-      } else if (input$ancestry == "Caribbean") {
-        fread(system.file("dat", "CR_map.csv", package = "MCANOVA"), data.table = FALSE)
-      } else if (input$ancestry == "East Asian") {
-        fread(system.file("dat", "EA_map.csv", package = "MCANOVA"), data.table = FALSE)
-      } else if (input$ancestry == "South Asian") {
-        fread(system.file("dat", "SA_map.csv", package = "MCANOVA"), data.table = FALSE)
+      path <- system.file("dat", package = "MCANOVA")
+      if (input$dataset == "Calls SNPs") {
+        if (input$ancestry == "African"){
+          fread("AF_map.csv", data.table = FALSE)
+        } else if (input$ancestry == "Caribbean") {
+          fread("CR_map.csv", data.table = FALSE)
+        } else if (input$ancestry == "East Asian") {
+          fread("EA_map.csv", data.table = FALSE)
+        } else if (input$ancestry == "South Asian") {
+          fread("SA_map.csv", data.table = FALSE)
+        }
       }
-    }
     }) 
     
     ancestry_label <- reactive({
