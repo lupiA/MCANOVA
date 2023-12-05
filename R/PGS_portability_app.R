@@ -111,13 +111,13 @@ PGS_portability_app <- function() {
       path <- system.file("dat", package = "MCANOVA")
       if (input$dataset == "Calls SNPs") {
         if (input$ancestry == "African"){
-          fread(paste0(path, "AF_map.csv"), data.table = FALSE)
+          fread(paste0(path, "/AF_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "Caribbean") {
-          fread(paste0(path, "CR_map.csv"), data.table = FALSE)
+          fread(paste0(path, "/CR_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "East Asian") {
-          fread(paste0(path, "EA_map.csv"), data.table = FALSE)
+          fread(paste0(path, "/EA_map.csv"), data.table = FALSE)
         } else if (input$ancestry == "South Asian") {
-          fread(paste0(path, "SA_map.csv"), data.table = FALSE)
+          fread(paste0(path, "/SA_map.csv"), data.table = FALSE)
         }
       }
     }) 
