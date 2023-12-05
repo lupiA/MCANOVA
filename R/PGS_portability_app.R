@@ -114,19 +114,19 @@ PGS_portability_app <- function() {
         if (input$ancestry == "African"){
           tmp <- fread(paste0(path, "/AF_map.csv"), data.table = FALSE)
           tmp$Cohort <- "African"
-          data.frame(snp_map, tmp)
+          data.frame(snp_map, tmp, check.names = FALSE)
         } else if (input$ancestry == "Caribbean") {
           tmp <- fread(paste0(path, "/CR_map.csv"), data.table = FALSE)
           tmp$Cohort <- "Caribbean"
-          data.frame(snp_map, tmp)
+          data.frame(snp_map, tmp, check.names = FALSE)
         } else if (input$ancestry == "East Asian") {
           tmp <- fread(paste0(path, "/EA_map.csv"), data.table = FALSE)
           tmp$Cohort <- "East Asian"
-          data.frame(snp_map, tmp)
+          data.frame(snp_map, tmp, check.names = FALSE)
         } else if (input$ancestry == "South Asian") {
           tmp <- fread(paste0(path, "/SA_map.csv"), data.table = FALSE)
           tmp$Cohort <- "South Asian"
-          data.frame(snp_map, tmp)
+          data.frame(snp_map, tmp, check.names = FALSE)
         }
       }
     }) 
@@ -145,7 +145,7 @@ PGS_portability_app <- function() {
     
     filtered_snp_data <- reactive({
       snps <- dat()
-      colnames(snps)[3] <- "Relative Accuracy (RA)"
+      colnames(snps)[6] <- "Relative Accuracy (RA)"
       snp_data <- NULL
       
       if (input$input_range == "Single Marker") {
