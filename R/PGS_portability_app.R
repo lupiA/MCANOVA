@@ -23,20 +23,20 @@ PGS_portability_app <- function() {
         uiOutput("ancestry_dropdown"),
         br(),
         radioButtons("input_range", "Marker Input:",
-                     choices = c("Single Marker", "Range of Markers (within chromosome)",
-                     "Comma-separated List of SNP RS IDs","Single Gene")
+                     choices = c("Range of Markers (within chromosome)",
+                     "Comma-separated List of SNP RS IDs","Single Gene","Single Marker")
         ),
         br(),
         conditionalPanel(
           condition = "input.input_range == 'Single Marker'",
           radioButtons("input_type", "Input Type:",
-                       choices = c("SNP RS ID", "Base Pair Position & Chromosome")
+                       choices = c("Base Pair Position & Chromosome", "SNP RS ID")
           )
         ),
         conditionalPanel(
           condition = "input.input_range == 'Range of Markers (within chromosome)'",
           radioButtons("input_type2", "Input Type:",
-                       choices = c("SNP RS ID", "Base Pair Position & Chromosome")
+                       choices = c("Base Pair Position & Chromosome", "SNP RS ID")
           )
         ),
         conditionalPanel(
