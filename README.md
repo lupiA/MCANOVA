@@ -21,9 +21,9 @@ To install the development version from Github:
  
 ## Functions and their use
 
- - `PGS_portability_app()` : Launches a Shiny App that allows exploring the RA maps we develped using UK-Biobank data ([Example 1](#EXAMPLE_1)).
- - `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared based on genomes from two populations ([Example 2](#EXAMPLE_2)).
- - `getSegments()`: Finds disjoint chromosome segments of a minimum length (basepairs) and size (number of SNPs).
+ - `PGS_portability_app()` : Launches a Shiny App for the RA Maps we developed using UK-Biobank data ([Example 1](#EXAMPLE_1)).
+ - `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared ([Example 2](#EXAMPLE_2)).
+ - `getSegments()`: Finds disjoint chromosome segments o.
 
 <div id="EXAMPLE_1" />
 
@@ -36,7 +36,7 @@ To install the development version from Github:
  PGS_portability_app()
 ```
 
-[menue](#MENUE)
+[Back](#MENUE)
 
 
 <div id="EXAMPLE_2" />
@@ -117,7 +117,7 @@ for (i in min(MAP$segments):max(MAP$segments)) {
 }
 ```
 
-[Back to menue](#MENUE)
+[Back](#MENUE)
 
 That predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/MCANOVA/blob/main/R/MC_ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
 \
