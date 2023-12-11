@@ -23,7 +23,9 @@ To install the development version from Github:
 
  - [Shiny App](#EXAMPLE_1): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
  - [MCANOVA](#EXAMPLE_2): Estimate Within- and Cross-ancestry R-squared.
- - `getSegments()`: Finds disjoint chromosome segments.
+ - [Loading Relative Accuracy maps in an R session](#EXAMPLE_3).
+ - [Segments](#EXAMPLE_4): Finds disjoint chromosome segments.
+   
 
 <div id="EXAMPLE_1" />
 
