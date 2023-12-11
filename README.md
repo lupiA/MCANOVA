@@ -1,17 +1,27 @@
 # MCANOVA Package
 
-# Installation
+MC-ANOVA can be used to estimate the Relative Accuracy (RA, Wang et al.(2020)](https://www.nature.com/articles/s41467-020-17719-y) of cross-ancestry prediction for short chromosome segments.
+The method extends the HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) to situations involving genomes of two populations. The estimates derived from MC-ANOVA can be used to predict the portability of local genomic scores in cross-ancestry PGS prediction. 
+
+## Installation
+
 To install the development version from Github:
 
-```
-# install.packages("remotes")
-remotes::install_github("lupiA/MCANOVA")
-library(MCANOVA)
+```r
+ # install.packages("remotes")
+ remotes::install_github("lupiA/MCANOVA")
+ library(MCANOVA)
 ```
 
-# Cross-Ancestry-Portability
+## Functions and their use
 
-MC-ANOVA is an extension of HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) that predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/MCANOVA/blob/main/R/MC_ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
+| Function  | Use  | 
+|---|---|
+| `MCANOVA()`  |   | 
+
+
+
+hat predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/MCANOVA/blob/main/R/MC_ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
 \
 \
 We also provide a function, [getSegments.R](https://github.com/lupiA/MCANOVA/blob/main/R/getSegments.R), to group SNPs into local segments based on a provided Kbp size (e.g., 10 Kbp) and minimum number of SNPs (e.g., 10 SNPs).
