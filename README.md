@@ -1,6 +1,6 @@
 # MCANOVA Package
 
-MC-ANOVA can be used to estimate the Relative Accuracy (RA, Wang et al.(2020)](https://www.nature.com/articles/s41467-020-17719-y) of cross-ancestry prediction for short chromosome segments.
+MC-ANOVA can be used to estimate the Relative Accuracy (RA, [Wang et al.(2020)(https://www.nature.com/articles/s41467-020-17719-y)) of cross-ancestry prediction for short chromosome segments.
 The method extends the HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) to situations involving genomes of two populations. The estimates derived from MC-ANOVA can be used to predict the portability of local genomic scores in cross-ancestry PGS prediction. 
 
 ## Installation
