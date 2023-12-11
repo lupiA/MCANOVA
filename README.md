@@ -19,11 +19,11 @@ To install the development version from Github:
 <div id="MENUE" />
 
  
-## Functions and their use
+## Examples
 
- - `PGS_portability_app()` : Launches a Shiny App for the RA Maps we developed using UK-Biobank data ([Example 1](#EXAMPLE_1)).
- - `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared ([Example 2](#EXAMPLE_2)).
- - `getSegments()`: Finds disjoint chromosome segments o.
+ - [Shiny App](#EXAMPLE_1): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
+ - [MCANOVA](#EXAMPLE_2): Estimate Within- and Cross-ancestry R-squared.
+ - `getSegments()`: Finds disjoint chromosome segments.
 
 <div id="EXAMPLE_1" />
 
@@ -33,6 +33,7 @@ To install the development version from Github:
 
 
 ```r
+ library(MCANOVA)
  PGS_portability_app()
 ```
 
@@ -50,7 +51,6 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 
 ```r
 # Load necessary packages
-remotes::install_github("lupiA/MCANOVA")
 library(MCANOVA)
 library(BGData)
 
