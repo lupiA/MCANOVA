@@ -36,7 +36,7 @@ To install the development version from Github:
  PGS_portability_app()
 ```
 
-[Back to menue](#MENUE)
+[menue](#MENUE)
 
 
 <div id="EXAMPLE_2" />
