@@ -23,6 +23,8 @@ To install the development version from Github:
 
 <div id="EXAMPLE_1" />
 
+
+
 ## Example 1: Using the Shiny App
 
 
