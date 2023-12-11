@@ -17,28 +17,21 @@ To install the development version from Github:
 
 ## Functions and their use
 
- -  `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared based on genomes from two populations ([Example]()).
-
-   
-| Function  |      Use     |  Example |
-|----------|-------------|------|
-| MCANOVA(X1,X2) | Estimate Within- and Cross-ancestry R-squared based on genomes from two populations (`X1` and `X2`, subjects in rows, SNPs in columns). | [Example 2]() |
-
-
-| Function  | Use  | 
-|---|---|
-| `MCANOVA(X1,X2)`  |  Estimate Within- and Cross-ancestry R-squared based on genomes from two populations (`X1` and `X2`, subjects in rows, SNPs in columns). |
-| `PGS_portability_app()`  |  Launches an R Shiny App that allows exploring the RA maps we develped using UK-Biobank data |
-| `getSegments()` | Finds disjoint chromosme segments of a minimum length (basepairs) and size (number of SNPs). |
-
-
+ - `PGS_portability_app()` : Launches a Shiny App that allows exploring the RA maps we develped using UK-Biobank data ([Example 1](#EXAMPLE_1)).
+ - `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared based on genomes from two populations ([Example 2](#EXAMPLE_1)).
+ - `getSegments()`: Finds disjoint chromosome segments of a minimum length (basepairs) and size (number of SNPs).
+ 
 ## Example 1: Using the Shiny App
+
+<div id="EXAMPLE_1" />
 
 ```r
  PGS_portability_app()
 ```
 
 ### Example 2: Running MC-ANOVA 
+
+<div id="EXAMPLE_2" />
 
 This example requires the R package [BGData](https://github.com/QuantGen/BGData/tree/master) which is installed along with the MCANOVA package:
 
