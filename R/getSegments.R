@@ -1,4 +1,4 @@
-#' Computes small chromosome segments
+#' Finds disjoint chromosome segments of a minimum length and size
 #'
 #' @description Calls getSegmentsChr function to compute small chromosome segments
 #' 
