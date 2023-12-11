@@ -17,6 +17,9 @@ To install the development version from Github:
 
 ## Functions and their use
 
+ -  `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared based on genomes from two populations ([Example]()).
+
+   
 | Function  |      Use     |  Example |
 |----------|-------------|------|
 | MCANOVA(X1,X2) | Estimate Within- and Cross-ancestry R-squared based on genomes from two populations (`X1` and `X2`, subjects in rows, SNPs in columns). | [Example 2]() |
