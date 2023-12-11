@@ -17,10 +17,15 @@ To install the development version from Github:
 
 ## Functions and their use
 
+| Function  |      Use     |  Example |
+|----------|-------------|------|
+| MCANOVA(X1,X2) | Estimate Within- and Cross-ancestry R-squared based on genomes from two populations (`X1` and `X2`, subjects in rows, SNPs in columns). | [Example 2]() |
+
+
 | Function  | Use  | 
 |---|---|
 | `MCANOVA(X1,X2)`  |  Estimate Within- and Cross-ancestry R-squared based on genomes from two populations (`X1` and `X2`, subjects in rows, SNPs in columns). |
-| `PGS_portability_app()`  |  Launches an R Shiny App that allows exploring the RA maps we develped using UK-Biobank data|
+| `PGS_portability_app()`  |  Launches an R Shiny App that allows exploring the RA maps we develped using UK-Biobank data |
 | `getSegments()` | Finds disjoint chromosme segments of a minimum length (basepairs) and size (number of SNPs). |
 
 
