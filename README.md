@@ -20,18 +20,20 @@ To install the development version from Github:
  - `PGS_portability_app()` : Launches a Shiny App that allows exploring the RA maps we develped using UK-Biobank data ([Example 1](#EXAMPLE_1)).
  - `MCANOVA(X1,X2)`: Estimate Within- and Cross-ancestry R-squared based on genomes from two populations ([Example 2](#EXAMPLE_1)).
  - `getSegments()`: Finds disjoint chromosome segments of a minimum length (basepairs) and size (number of SNPs).
- 
-## Example 1: Using the Shiny App
 
 <div id="EXAMPLE_1" />
+
+## Example 1: Using the Shiny App
+
 
 ```r
  PGS_portability_app()
 ```
 
+<div id="EXAMPLE_2" />
+ 
 ### Example 2: Running MC-ANOVA 
 
-<div id="EXAMPLE_2" />
 
 This example requires the R package [BGData](https://github.com/QuantGen/BGData/tree/master) which is installed along with the MCANOVA package:
 
