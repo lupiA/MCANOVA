@@ -122,8 +122,8 @@ PGS_portability_app <- function() {
 
     dat <- reactive({
 #      if (input$dataset == "Calls SNPs") {
-         data(MAP)
-         colnames(MAP)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
+         MAP_tmp <- MCANOVA::MAP
+         colnames(MAP_tmp)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
 #      } else if (input$dataset == "Imputed SNPs") {
 #        fread("MAP_imputed.csv", data.table = FALSE)
 #      }
