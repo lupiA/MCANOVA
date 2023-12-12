@@ -4,23 +4,22 @@
 #'
 #' @export
 PGS_portability_app <- function() {
+  
   library(shiny)
-#  library(data.table)
   library(ggplot2)
-
-
+  
   # Define the UI
   ui <- fluidPage(
     titlePanel("SNP Portability App"),
     sidebarLayout(
       sidebarPanel(
         selectInput("ancestry", "Target Ancestry:",
-                    choices = c("African","Caribbean","East Asian","South Asian")
+                    choices = c("African", "Caribbean", "East Asian", "South Asian")
         ),
         br(),
         radioButtons("input_range", "Marker Input:",
                      choices = c("Range of Markers (within chromosome)",
-                     "Comma-separated List of SNP RS IDs","Single Gene","Single Marker")
+                                 "Comma-separated List of SNP RS IDs", "Single Gene", "Single Marker")
         ),
         br(),
         conditionalPanel(
@@ -41,19 +40,19 @@ PGS_portability_app <- function() {
         ),
         conditionalPanel(
           condition = "input.input_type == 'Base Pair Position & Chromosome' && 
-              input.input_range == 'Single Marker'",
+                input.input_range == 'Single Marker'",
           numericInput("chromosome_input", "Enter Chromosome:", value = 1),
           numericInput("bp_position", "Enter Base Pair Position:", value = 1)
         ),
         conditionalPanel(
           condition = "input.input_type2 == 'SNP RS ID' && input.input_range == 
-              'Range of Markers (within chromosome)'",
+                'Range of Markers (within chromosome)'",
           textInput("start_snp_id", "Enter Start SNP ID:"),
           textInput("end_snp_id", "Enter End SNP ID:")
         ),
         conditionalPanel(
           condition = "input.input_type2 == 'Base Pair Position & Chromosome' && 
-              input.input_range == 'Range of Markers (within chromosome)'",
+                input.input_range == 'Range of Markers (within chromosome)'",
           numericInput("chromosome_input2", "Enter Chromosome:", value = 6),
           numericInput("start_bp_position", "Enter Start Base Pair Position (e.g., the MHC region):", value = 28477797),
           numericInput("end_bp_position", "Enter End Base Pair Position:", value = 33448354)
@@ -91,9 +90,9 @@ PGS_portability_app <- function() {
   
   # Define the server
   server <- function(input, output, session) {
-
+    
     dat <- reactive({
-      MAP_tmp <- MCANOVA::MAP
+      dat <- MCANOVA::MAP
     })
     
     ancestry_label <- reactive({
@@ -123,7 +122,7 @@ PGS_portability_app <- function() {
         else if (input$input_type == "Base Pair Position & Chromosome") {
           snps_chr <- snps[which(snps$Chromosome == input$chromosome_input),]
           snp_data <- snps_chr[which(snps_chr$`BP position` == input$bp_position & snps_chr$Cohort == input$ancestry),
-                               c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                            c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
         }
         
       }  else if (input$input_range == "Range of Markers (within chromosome)") {
@@ -137,7 +136,7 @@ PGS_portability_app <- function() {
               snps$Chromosome[start_snp_idx_1] == snps$Chromosome[end_snp_idx_1]) {
             snp_data <- snps[start_snp_idx_1:end_snp_idx_1,
                              c("SNP","Relative Accuracy",paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
-
+            
           }
           
         }  else if (input$input_type2 == "Base Pair Position & Chromosome") {
@@ -147,7 +146,7 @@ PGS_portability_app <- function() {
           if(is.null(input$start_bp_position) || is.null(input$end_bp_position) || is.na(input$start_bp_position) || is.na(input$end_bp_position)){
             snp_data <- NULL
           } else if(length(input$start_bp_position:input$end_bp_position) > 0 && input$start_bp_position < input$end_bp_position && 
-                                      input$start_bp_position > 0 && nrow(snps)>0){
+                    input$start_bp_position > 0 && nrow(snps)>0){
             snp_data <- snps[which(snps$`BP position` %in% input$start_bp_position:input$end_bp_position),
                              c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
           }
@@ -179,6 +178,7 @@ PGS_portability_app <- function() {
     
     filtered_hist_data <- reactive({
       hist <- dat()
+      colnames(hist)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
       hist_data <- hist[which(hist$Cohort == input$ancestry), c("Relative Accuracy","Cohort")]
       if (nrow(hist_data) == 0) {
         hist_data <- NULL
@@ -217,33 +217,45 @@ PGS_portability_app <- function() {
     })
     
     output$histogram <- renderPlot({
+      theme.ggplot <- theme(legend.position = "none",
+                        axis.text = element_text(size = 20), axis.title = element_text(size=25), strip.text = element_text(size=20),
+                        panel.background = element_rect(fill = "aliceblue", colour = "grey",
+                        linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
+                        axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
+                        axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
+                        panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
+                        plot.title = element_text(hjust = .5, size=25))
       if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
         ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
         snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
-        
         snp_percentile <- ecdf(ra_values)(snp_ra) * 100
         
-        hist(ra_values, main = "Relative Accuracy Histogram (input in red)\n\ ", xlab = "Relative Accuracy Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
-        abline(v = snp_ra, col = "red3", lwd = 3)
+        ggplot() +
+          geom_histogram(aes(x = ra_values), fill = "deepskyblue2", color = "midnightblue", binwidth = 0.02) +
+          geom_vline(xintercept = snp_ra, color = "darkred", linewidth = 1) +
+          labs(title = "Relative Accuracy Histogram (input in red)\n", x = "Relative Accuracy Value", y = "Frequency") +
+          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 2, 
+                   label = paste("SNP Relative Accuracy Percentile: ", round(snp_percentile, 2), "%"), color = "black", size = 6) +
+          theme.ggplot
         
-        mtext(paste("SNP Relative Accuracy Percentile: ", round(snp_percentile, 2), "%\n\ ",sep=""), side = 3, col = "black")
       } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
-                 input$input_range == "Single Gene" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+                 input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
         ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
         snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
         
-        snp_percentile <- ecdf(ra_values)(snp_ra) * 100
-        
-        hist(ra_values, main = "Relative Accuracy Histogram (inputs in red)\n\ ", xlab = "Relative Accuracy Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
+        p1 <- ggplot()
         if (length(table(snp_ra)) > 10) {
-#          if(input$dataset=="Calls SNPs"){
-            h2 <- hist(snp_ra, plot = FALSE)
-            plot(h2, col = "red3", alpha = .6, add = TRUE)
-#          } else if(input$dataset=="Imputed SNPs"){
-#            points(x = snp_ra, y = rep(150000, length(snp_ra)), col = "red3", lwd = .6, pch = 4)
-#          }
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "deepskyblue2", color = "midnightblue", binwidth = 0.02) +
+            geom_histogram(aes(x = snp_ra), fill = "darkred", alpha = .4, color = "darkred", binwidth = .12) +
+            labs(title = "Relative Accuracy Histogram (inputs in red)\n", x = "Relative Accuracy Value", y = "Frequency") +
+            theme.ggplot
         } else {
-          abline(v = snp_ra, col = "red3", lwd = 3)
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "deepskyblue2", color = "midnightblue", binwidth = 0.02) +
+            geom_vline(xintercept = snp_ra, color = "darkred", linewidth = 1) +
+            labs(title = "Relative Accuracy Histogram (inputs in red)\n", x = "Relative Accuracy Value", y = "Frequency") +
+            theme.ggplot
         }
       }
     })
@@ -255,7 +267,7 @@ PGS_portability_app <- function() {
       content = function(file) {
         if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
           filtered_table <- filtered_snp_data()[, c("SNP", "Chromosome", "BP position", "Allele", "Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU", "Corr. EU=>EU S.E.","Gene")]
-          data.frame(filtered_table,check.names = FALSE)
+          data.frame(filtered_table, check.names = FALSE)
           write.csv(filtered_table, file, row.names = FALSE)
         }
       }
