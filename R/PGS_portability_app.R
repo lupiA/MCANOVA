@@ -91,30 +91,26 @@ PGS_portability_app <- function() {
   
   # Define the server
   server <- function(input, output, session) {
-    
-    ancestry_label <- reactive({
-      if(input$ancestry=="African"){
-        "AF"
-      } else if(input$ancestry=="Caribbean"){
-        "CR"
-      } else if(input$ancestry=="East Asian"){
-        "EA"
-      } else if(input$ancestry=="South Asian"){
-        "SA"
-      }
-    })
 
     dat <- reactive({
-#      if (input$dataset == "Calls SNPs") {
-         MAP_tmp <- MCANOVA::MAP
-         colnames(MAP_tmp)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
-#      } else if (input$dataset == "Imputed SNPs") {
-#        fread("MAP_imputed.csv", data.table = FALSE)
-#      }
+      MAP_tmp <- MCANOVA::MAP
+    })
+    
+    ancestry_label <- reactive({
+      if(input$ancestry == "African"){
+        "AF"
+      } else if(input$ancestry == "Caribbean"){
+        "CR"
+      } else if(input$ancestry == "East Asian"){
+        "EA"
+      } else if(input$ancestry == "South Asian"){
+        "SA"
+      }
     })
     
     filtered_snp_data <- reactive({
       snps <- dat()
+      colnames(snps)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
       snp_data <- NULL
       
       if (input$input_range == "Single Marker") {
