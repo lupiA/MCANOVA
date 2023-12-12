@@ -1,5 +1,5 @@
 \name{AF2}
-\alias{A2F}
+\alias{AF2}
 \title{Map of the Relative Accuracy of EU-derived PGS for African Ancestry}
 \description{
 
