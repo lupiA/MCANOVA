@@ -23,18 +23,31 @@ To install the development version from Github:
  
 ## Examples
 
- - [Shiny App](#APP): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
- - [MCANOVA](#MCANOVA): Estimate Within- and Cross-ancestry R-squared.
  - [Loading Relative Accuracy maps in an R session](#DATA).
+ - [Shiny App](#APP): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
  - [Segments](#SEGMENTS): Finds disjoint chromosome segments.
+ - [MCANOVA](#MCANOVA): Estimate Within- and Cross-ancestry R-squared.
+
+
+
+<div id="DATA" />
+  
+### Loading the Relative Accuracy maps into an R session
+
+```r
+ library(MCANOVA)
+ data(AF) # African ancestry
+
+```
+
+[Back](#MENUE)
+
    
 
 <div id="APP" />
 
 
-
 ### Launcing the Shiny App
-
 
 ```r
  library(MCANOVA)
@@ -44,15 +57,6 @@ To install the development version from Github:
 [Back](#MENUE)
 
 
-<div id="DATA" />
-
-### Loading the Relative Accuracy maps into an R session
-
-```r
- library(MCANOVA)
- data(AF) # African ancestry
-
-```
 
 <div id="SEGMENTS" />
 
@@ -60,8 +64,17 @@ To install the development version from Github:
 ### Creating chromosome segments of a minimum basepair length and size (# of SNPs).
 
 
-
 ```r
+# Genotype map
+ path <- system.file("dat", package = "MCANOVA")
+ genotype_map <- read.csv(paste0(path, "/geno_map_example.csv"), header = TRUE)
+
+
+# Initialize MAP and define segments
+ minSNPs <- 10
+ minBP <- 10e3
+ MAP <- genotype_map
+ MAP$segments <- getSegments(MAP$base_pair_position, chr = MAP$chromosome, minBPSize = minBP, minSize = minSNPs, verbose = TRUE)
 
 ```
 
@@ -86,10 +99,6 @@ library(BGData)
 # Set seed
 set.seed(12345)
 
-# Genotype map
-path <- system.file("dat", package = "MCANOVA")
-genotype_map <- read.csv(paste0(path, "/geno_map_example.csv"), header = TRUE)
-
 # Generate genotypes (100 subjects and 500 SNPs)
 n <- 100
 p <- 500
@@ -102,12 +111,6 @@ n_2 <- round(0.2 * n)
 ancestry <- rep(c("Pop_1", "Pop_2"), times = c(n_1, n_2))
 rownames(X) <- ancestry
 
-# Initialize MAP and define segments
-minSNPs <- 10
-minBP <- 10e3
-MAP <- genotype_map
-MAP$segments <- getSegments(MAP$base_pair_position, chr = MAP$chromosome, minBPSize = minBP, minSize = minSNPs, verbose = TRUE)
-
 # Initialize portability estimates
 MAP$correlation_within <- NA
 MAP$correlation_within_SE <- NA
@@ -117,9 +120,9 @@ MAP$R_squared_within <- NA
 MAP$R_squared_across <- NA
 
 # Set parameters for MC-ANOVA
-lambda <- 1e-8
-nRep <- 300
-nQTL <- 3
+lambda <- 1e-8 # a small constant added to the diagonals of X'X to avoid numerical errors when some SNPs are in perfect LD
+nRep <- 300 # number of Monte Carlo simulations
+nQTL <- 3 # numbre of causal variants
 
 # Loop over segments and run MC-ANOVA
 for (i in min(MAP$segments):max(MAP$segments)) {
