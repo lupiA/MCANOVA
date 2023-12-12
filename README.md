@@ -1,9 +1,11 @@
 # MCANOVA Package
 
-MC-ANOVA can be used to estimate the Relative Accuracy (RA, [Wang et al.(2020)](https://www.nature.com/articles/s41467-020-17719-y)) of cross-ancestry prediction for short chromosome segments.
-
-
-The method extends the HD-ANOVA [de los Campos et al., 2020](https://pubmed.ncbi.nlm.nih.gov/33315963/) to situations involving genomes of two populations. The estimates derived from MC-ANOVA can be used to predict the portability of local genomic scores in cross-ancestry PGS prediction. 
+The MC-ANOVA R package provides:
+  
+  - A function (`MCANOVA()`)can be used to estimate the Relative Accuracy (RA, [Wang et al.(2020)](https://www.nature.com/articles/s41467-020-17719-y)) of cross-ancestry prediction for short chromosome segments.
+  - Maps of Relative Accuracy of European-derived local genomic scores for poulations of African, Caribbean, South Asian, and East Asian ancestry,
+  - A Shiny App providing a graphical interface to the Relative Accuracy maps.
+  - Tools that, together with `MCANOVA()` can be used develop Relative Accuracy maps.
 
 ## Installation
 
@@ -21,17 +23,17 @@ To install the development version from Github:
  
 ## Examples
 
- - [Shiny App](#EXAMPLE_1): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
- - [MCANOVA](#EXAMPLE_2): Estimate Within- and Cross-ancestry R-squared.
- - [Loading Relative Accuracy maps in an R session](#EXAMPLE_3).
- - [Segments](#EXAMPLE_4): Finds disjoint chromosome segments.
+ - [Shiny App](#APP): Launches a Shiny App for the RA Maps we developed using UK-Biobank data.
+ - [MCANOVA](#MCANOVA): Estimate Within- and Cross-ancestry R-squared.
+ - [Loading Relative Accuracy maps in an R session](#DATA).
+ - [Segments](#SEGMENTS): Finds disjoint chromosome segments.
    
 
-<div id="EXAMPLE_1" />
+<div id="APP" />
 
 
 
-## Example 1: Using the Shiny App
+### Launcing the Shiny App
 
 
 ```r
@@ -42,11 +44,36 @@ To install the development version from Github:
 [Back](#MENUE)
 
 
-<div id="EXAMPLE_2" />
+<div id="DATA" />
+
+### Loading the Relative Accuracy maps into an R session
+
+```r
+ library(MCANOVA)
+ data(AF) # African ancestry
+
+```
+
+<div id="SEGMENTS" />
 
 
- 
-### Example 2: Running MC-ANOVA 
+### Creating chromosome segments of a minimum basepair length and size (# of SNPs).
+
+
+
+```r
+
+```
+
+
+[Back](#MENUE)
+
+
+
+<div id="S" />
+
+
+### Running MC-ANOVA 
 
 
 This example requires the R package [BGData](https://github.com/QuantGen/BGData/tree/master) which is installed along with the MCANOVA package:
@@ -120,17 +147,4 @@ for (i in min(MAP$segments):max(MAP$segments)) {
 ```
 
 [Back](#MENUE)
-
-That predicts the portablity of SNP segments in the context of cross-ancestry Polygenic Risk Scores (PGS). The goal is to estimate the extent of genome differentiation with within and across ancestry R-squared. The [MC_ANOVA.R](https://github.com/lupiA/MCANOVA/blob/main/R/MC_ANOVA.R) function draws genetic values for QTL from a local core of SNPs and then predicts those values using SNPs not in the core or randomly chosen to be QTL. The R-squared is the squared correlation between the generated genetic values and the predicted values.
-\
-\
-We also provide a function, [getSegments.R](https://github.com/lupiA/MCANOVA/blob/main/R/getSegments.R), to group SNPs into local segments based on a provided Kbp size (e.g., 10 Kbp) and minimum number of SNPs (e.g., 10 SNPs).
-\
-\
-Finally, we have provided an interactive tool, an [R Shiny App](https://github.com/lupiA/MCANOVA/blob/main/R/PGS_portability_app.R), in which users can input a single SNP (base pair [BP] position), range of SNPs (BP positions), or a comma-separated list of SNPs, and the App will output portability and marker information. The app can be opened by calling the function after installing the MCANOVA package:
-```
-PGS_portability_app()
-```
-Users are able to download the main output from the App to a .csv file.
-
 
