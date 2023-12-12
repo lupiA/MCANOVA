@@ -2,10 +2,10 @@
 
 The MC-ANOVA R package provides:
   
-  - A function (`MCANOVA()`)can be used to estimate the Relative Accuracy (RA, [Wang et al.(2020)](https://www.nature.com/articles/s41467-020-17719-y)) of cross-ancestry prediction for short chromosome segments.
-  - Maps of Relative Accuracy of European-derived local genomic scores for poulations of African, Caribbean, South Asian, and East Asian ancestry,
-  - A Shiny App providing a graphical interface to the Relative Accuracy maps.
-  - Tools that, together with `MCANOVA()` can be used develop Relative Accuracy maps.
+  - **MCANOVA**: A function = to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
+  - **Maps of the Relative Accuracy** of European-derived local genomic scores for poulations of African, Caribbean, South Asian, and East Asian ancestry,
+  - **A Shiny App** providing a graphical interface to the Relative Accuracy maps.
+  - **Tools** that, together with `MCANOVA()` can be used develop Relative Accuracy maps.
 
 ## Installation
 
@@ -13,8 +13,8 @@ To install the development version from Github:
 
 ```r
  # install.packages("remotes")
- remotes::install_github("lupiA/MCANOVA")
- library(MCANOVA)
+  remotes::install_github("lupiA/MCANOVA")
+  library(MCANOVA)
 ```
 
 
