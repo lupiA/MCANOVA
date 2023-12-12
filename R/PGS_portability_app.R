@@ -14,12 +14,12 @@ PGS_portability_app <- function() {
     titlePanel("SNP Portability App"),
     sidebarLayout(
       sidebarPanel(
-        selectInput("dataset", "Select Genotype Array:",
-                    # choices = c("Calls SNPs", "Imputed SNPs")
-                    choices = c("Calls SNPs")
-        ),
-        # h6("*imputed selection will take longer to load and run."),
-        br(),
+#        selectInput("dataset", "Select Genotype Array:",
+#                    # choices = c("Calls SNPs", "Imputed SNPs")
+#                    choices = c("Calls SNPs")
+#        ),
+#        # h6("*imputed selection will take longer to load and run."),
+#        br(),
         uiOutput("ancestry_dropdown"),
         br(),
         radioButtons("input_range", "Marker Input:",
@@ -58,9 +58,9 @@ PGS_portability_app <- function() {
         conditionalPanel(
           condition = "input.input_type2 == 'Base Pair Position & Chromosome' && 
               input.input_range == 'Range of Markers (within chromosome)'",
-          numericInput("chromosome_input2", "Enter Chromosome:", value = 1),
-          numericInput("start_bp_position", "Enter Start Base Pair Position:", value = 1),
-          numericInput("end_bp_position", "Enter End Base Pair Position:", value = 1)
+          numericInput("chromosome_input2", "Enter Chromosome:", value = 6),
+          numericInput("start_bp_position", "Enter Start Base Pair Position (e.g., the MHC region):", value = 28477797),
+          numericInput("end_bp_position", "Enter End Base Pair Position:", value = 33448354)
         ),
         conditionalPanel(
           condition = "input.input_range == 'Comma-separated List of SNP RS IDs'",
@@ -95,41 +95,18 @@ PGS_portability_app <- function() {
   
   # Define the server
   server <- function(input, output, session) {
+
     ancestry_choices <- reactive({
-      if (input$dataset == "Calls SNPs") {
+#      if (input$dataset == "Calls SNPs") {
         c("African","Caribbean","East Asian","South Asian")
-      }
+#      }
     })
     
     observe({
       output$ancestry_dropdown <- renderUI({
-        selectInput("ancestry", "Select Ancestry:", choices = ancestry_choices())
+        selectInput("ancestry", "Target Ancestry:", choices = ancestry_choices())
       })
     })
-    
-    dat <- reactive({
-      path <- system.file("dat", package = "MCANOVA")
-      snp_map <- fread(paste0(path, "/SNP_Map_Calls.csv"), data.table=FALSE)
-      if (input$dataset == "Calls SNPs") {
-        if (input$ancestry == "African"){
-          tmp <- fread(paste0(path, "/AF_map.csv"), data.table = FALSE)
-          tmp$Cohort <- "African"
-          data.frame(snp_map, tmp, check.names = FALSE)
-        } else if (input$ancestry == "Caribbean") {
-          tmp <- fread(paste0(path, "/CR_map.csv"), data.table = FALSE)
-          tmp$Cohort <- "Caribbean"
-          data.frame(snp_map, tmp, check.names = FALSE)
-        } else if (input$ancestry == "East Asian") {
-          tmp <- fread(paste0(path, "/EA_map.csv"), data.table = FALSE)
-          tmp$Cohort <- "East Asian"
-          data.frame(snp_map, tmp, check.names = FALSE)
-        } else if (input$ancestry == "South Asian") {
-          tmp <- fread(paste0(path, "/SA_map.csv"), data.table = FALSE)
-          tmp$Cohort <- "South Asian"
-          data.frame(snp_map, tmp, check.names = FALSE)
-        }
-      }
-    }) 
     
     ancestry_label <- reactive({
       if(input$ancestry=="African"){
@@ -142,23 +119,31 @@ PGS_portability_app <- function() {
         "SA"
       }
     })
+
+    dat <- reactive({
+#      if (input$dataset == "Calls SNPs") {
+         load("MAP.RData")
+         colnames(MAP)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", " paste0("Corr. EU=>", ancestry_label(), " S.E.")", "Corr. EU=>EU S.E.")
+#      } else if (input$dataset == "Imputed SNPs") {
+#        fread("MAP_imputed.csv", data.table = FALSE)
+#      }
+    })
     
     filtered_snp_data <- reactive({
       snps <- dat()
-      colnames(snps)[6] <- "Relative Accuracy (RA)"
       snp_data <- NULL
       
       if (input$input_range == "Single Marker") {
         
         if (input$input_type == "SNP RS ID") {
           snp_data <- snps[which(snps$SNP == input$rs_id & snps$Cohort == input$ancestry),
-                           c("SNP","Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                           c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
         } 
         
         else if (input$input_type == "Base Pair Position & Chromosome") {
           snps_chr <- snps[which(snps$Chromosome == input$chromosome_input),]
           snp_data <- snps_chr[which(snps_chr$`BP position` == input$bp_position & snps_chr$Cohort == input$ancestry),
-                               c("SNP","Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                               c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
         }
         
       }  else if (input$input_range == "Range of Markers (within chromosome)") {
@@ -171,7 +156,8 @@ PGS_portability_app <- function() {
           if (length(start_snp_idx_1) > 0 && length(end_snp_idx_1) > 0 &&
               snps$Chromosome[start_snp_idx_1] == snps$Chromosome[end_snp_idx_1]) {
             snp_data <- snps[start_snp_idx_1:end_snp_idx_1,
-                             c("SNP","Relative Accuracy (RA)",paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                             c("SNP","Relative Accuracy",paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+
           }
           
         }  else if (input$input_type2 == "Base Pair Position & Chromosome") {
@@ -183,7 +169,7 @@ PGS_portability_app <- function() {
           } else if(length(input$start_bp_position:input$end_bp_position) > 0 && input$start_bp_position < input$end_bp_position && 
                                       input$start_bp_position > 0 && nrow(snps)>0){
             snp_data <- snps[which(snps$`BP position` %in% input$start_bp_position:input$end_bp_position),
-                             c("SNP","Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                             c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
           }
         }
       }  else if (input$input_range == "Comma-separated List of SNP RS IDs") {
@@ -192,7 +178,7 @@ PGS_portability_app <- function() {
         
         if (length(snps_in_list) > 0) {
           snp_data <- snps[which(snps$SNP %in% snps_in_list),
-                           c("SNP","Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                           c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
         }
         
       }  else if (input$input_range == "Single Gene") {
@@ -201,7 +187,7 @@ PGS_portability_app <- function() {
         
         if (length(snps_in_list) > 0) {
           snp_data <- snps[which(snps$SNP %in% snps_in_list),
-                           c("SNP","Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
+                           c("SNP","Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", "Chromosome", "BP position", "Allele", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.","Gene")]
         }
       }
       
@@ -213,12 +199,12 @@ PGS_portability_app <- function() {
     
     filtered_hist_data <- reactive({
       hist <- dat()
-      hist_data <- hist[which(hist$Cohort == input$ancestry), c("RA","Cohort")]
+      hist_data <- hist[which(hist$Cohort == input$ancestry), c("Relative Accuracy","Cohort")]
       if (nrow(hist_data) == 0) {
         hist_data <- NULL
       }
-      if (!is.null(hist_data) && length(which(is.na(hist_data$RA))) > 0) {
-        hist_data <- hist_data[-which(is.na(hist_data$RA)),]
+      if (!is.null(hist_data) && length(which(is.na(hist_data$`Relative Accuracy`))) > 0) {
+        hist_data <- hist_data[-which(is.na(hist_data$`Relative Accuracy`)),]
       }
       hist_data
     })
@@ -226,7 +212,7 @@ PGS_portability_app <- function() {
     output$table1 <- renderTable({
       if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
         if (!is.null(filtered_snp_data())) {
-          averages <- colMeans(filtered_snp_data()[, c("Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU")], na.rm = TRUE)
+          averages <- colMeans(filtered_snp_data()[, c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU")], na.rm = TRUE)
           if (input$input_range == "Range of Markers (within chromosome)") {
             data.frame("Metric" = names(averages), "Average" = averages)
           } else if (input$input_range == "Single Marker") {
@@ -244,7 +230,7 @@ PGS_portability_app <- function() {
       if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
         if (!is.null(filtered_snp_data())) {
           modified_table <- filtered_snp_data()[, c("SNP", "Chromosome", "BP position", 
-                                                    "Allele", "Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU", "Corr. EU=>EU S.E.","Gene")]
+                                                    "Allele", "Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU", "Corr. EU=>EU S.E.","Gene")]
           data.frame(modified_table,check.names = FALSE)
         }
       }
@@ -252,29 +238,30 @@ PGS_portability_app <- function() {
     
     output$histogram <- renderPlot({
       if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-        ra_values <- as.numeric(filtered_hist_data()$RA)
-        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy (RA)`)
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
         
         snp_percentile <- ecdf(ra_values)(snp_ra) * 100
         
-        hist(ra_values, main = "Relative Accuracy Histogram (input in red)\n\ ", xlab = "RA Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
+        hist(ra_values, main = "Relative Accuracy Histogram (input in red)\n\ ", xlab = "Relative Accuracy Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
         abline(v = snp_ra, col = "red3", lwd = 3)
         
-        mtext(paste("SNP RA Percentile: ", round(snp_percentile, 2), "%\n\ ",sep=""), side = 3, col = "black")
+        mtext(paste("SNP Relative Accuracy Percentile: ", round(snp_percentile, 2), "%\n\ ",sep=""), side = 3, col = "black")
       } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
                  input$input_range == "Single Gene" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-        ra_values <- as.numeric(filtered_hist_data()$RA)
-        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy (RA)`)
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
         
         snp_percentile <- ecdf(ra_values)(snp_ra) * 100
         
-        hist(ra_values, main = "Relative Accuracy Histogram (inputs in red)\n\ ", xlab = "RA Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
+        hist(ra_values, main = "Relative Accuracy Histogram (inputs in red)\n\ ", xlab = "Relative Accuracy Value", ylab = "Frequency", col = "lightblue1", breaks = 75)
         if (length(table(snp_ra)) > 10) {
-          if(input$dataset=="Calls SNPs"){
-            points(x = snp_ra, y = rep(12000, length(snp_ra)), col = "red3", lwd = .6, pch = 4)
-          } else if(input$dataset=="Imputed SNPs"){
-            points(x = snp_ra, y = rep(150000, length(snp_ra)), col = "red3", lwd = .6, pch = 4)
-          }
+#          if(input$dataset=="Calls SNPs"){
+            h2 <- hist(snp_ra, plot = FALSE)
+            plot(h2, col = "red3", alpha = .6, add = TRUE)
+#          } else if(input$dataset=="Imputed SNPs"){
+#            points(x = snp_ra, y = rep(150000, length(snp_ra)), col = "red3", lwd = .6, pch = 4)
+#          }
         } else {
           abline(v = snp_ra, col = "red3", lwd = 3)
         }
@@ -287,7 +274,7 @@ PGS_portability_app <- function() {
       },
       content = function(file) {
         if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
-          filtered_table <- filtered_snp_data()[, c("SNP", "Chromosome", "BP position", "Allele", "Relative Accuracy (RA)", paste0("Corr. EU=>", ancestry_label()), paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU", "Corr. EU=>EU S.E.","Gene")]
+          filtered_table <- filtered_snp_data()[, c("SNP", "Chromosome", "BP position", "Allele", "Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU", "Corr. EU=>EU S.E.","Gene")]
           data.frame(filtered_table,check.names = FALSE)
           write.csv(filtered_table, file, row.names = FALSE)
         }
