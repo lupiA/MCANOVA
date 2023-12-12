@@ -151,3 +151,9 @@ for (i in min(MAP$segments):max(MAP$segments)) {
 
 [Back](#MENUE)
 
+
+#### References
+
+- [Wang et al.(Nat. Comm., 2020)](https://www.nature.com/articles/s41467-020-17719-y) Theoretical and empirical quantification of the accuracy of polygenic scores in ancestry divergent populations. 
+- Lupi A., Vazquez A.I., and G. de los Campos (*submitted*). Mapping the Relative Accuracy of Cross-Ancestry Prediction.
+
