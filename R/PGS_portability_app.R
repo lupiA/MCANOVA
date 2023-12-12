@@ -5,7 +5,7 @@
 #' @export
 PGS_portability_app <- function() {
   library(shiny)
-  library(data.table)
+#  library(data.table)
   library(ggplot2)
 
 
@@ -123,7 +123,7 @@ PGS_portability_app <- function() {
     dat <- reactive({
 #      if (input$dataset == "Calls SNPs") {
          load("MAP.RData")
-         colnames(MAP)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", " paste0("Corr. EU=>", ancestry_label(), " S.E.")", "Corr. EU=>EU S.E.")
+         colnames(MAP)[6:10] <- c("Relative Accuracy", paste0("Corr. EU=>", ancestry_label()), "Corr. EU=>EU", paste0("Corr. EU=>", ancestry_label(), " S.E."), "Corr. EU=>EU S.E.")
 #      } else if (input$dataset == "Imputed SNPs") {
 #        fread("MAP_imputed.csv", data.table = FALSE)
 #      }
