@@ -14,13 +14,9 @@ PGS_portability_app <- function() {
     titlePanel("SNP Portability App"),
     sidebarLayout(
       sidebarPanel(
-#        selectInput("dataset", "Select Genotype Array:",
-#                    # choices = c("Calls SNPs", "Imputed SNPs")
-#                    choices = c("Calls SNPs")
-#        ),
-#        # h6("*imputed selection will take longer to load and run."),
-#        br(),
-        uiOutput("ancestry_dropdown"),
+        selectInput("ancestry", "Target Ancestry:",
+                    choices = c("African","Caribbean","East Asian","South Asian")
+        ),
         br(),
         radioButtons("input_range", "Marker Input:",
                      choices = c("Range of Markers (within chromosome)",
@@ -78,14 +74,14 @@ PGS_portability_app <- function() {
                  )
         ),
         fluidRow(width = 10, 
-                 h3("Portability Information"),
+                 h3("Table 1: Portability Information"),
                  tableOutput("table1")),
         fluidRow(
           width = 10, 
           plotOutput("histogram")
         ),
         fluidRow(width = 10, 
-                 h3("Additional Information"),
+                 h3("Table 2: Additional Information"),
                  downloadButton("download_table", "Download Table"),
                  tableOutput("table2")
         )
@@ -95,18 +91,6 @@ PGS_portability_app <- function() {
   
   # Define the server
   server <- function(input, output, session) {
-
-    ancestry_choices <- reactive({
-#      if (input$dataset == "Calls SNPs") {
-        c("African","Caribbean","East Asian","South Asian")
-#      }
-    })
-    
-    observe({
-      output$ancestry_dropdown <- renderUI({
-        selectInput("ancestry", "Target Ancestry:", choices = ancestry_choices())
-      })
-    })
     
     ancestry_label <- reactive({
       if(input$ancestry=="African"){
