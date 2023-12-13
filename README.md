@@ -105,6 +105,10 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
  X <- matrix(sample(0:2, n * p, replace = TRUE), ncol = p)
  data(geno_map_example)
  colnames(X) <- geno_map_example$SNPs
+ minSNPs <- 10
+ minBP <- 10e3
+ MAP_example <- geno_map_example
+ MAP_example$segments <- getSegments(MAP_example$base_pair_position, chr = MAP_example$chromosome, minBPSize = minBP, minSize = minSNPs, verbose = TRUE)
 
 # Assign ancestry IDs (80% to ancestry 1, 20% to ancestry 2)
  n_1 <- round(0.8 * n)
