@@ -82,7 +82,7 @@ To install the development version from GitHub:
 
 
 
-<div id="S" />
+<div id="MCANOVA" />
 
 
 ### Running MC-ANOVA 
