@@ -142,7 +142,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
    X_2 <- X[rownames(X) == "Group_2", chunk]
   
    # Run MC-ANOVA
-   out <- MC_ANOVA(X1=X_1, X2 = X_2, core = which(isCore), lambda = lambda, nQTL = nQTL, nRep = nRep)
+   out <- MC_ANOVA(X = X_1, X2 = X_2, core = which(isCore), lambda = lambda, nQTL = nQTL, nRep = nRep)
   
    # Extract portability estimates
    MAP_example$correlation_within[chunk[isCore]] <- out[1, 1]
