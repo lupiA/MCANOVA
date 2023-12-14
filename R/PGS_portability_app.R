@@ -58,9 +58,9 @@ PGS_portability_app <- function() {
                 input.input_range == 'Range of Markers (within chromosome)'",
           numericInput("chromosome_input2", "Enter Chromosome:", value = 6),
           numericInput("start_bp_position", "Enter Start Base Pair Position in Mbp (e.g., the MHC region):",
-                       value = 29.0),
+                       value = 29.75),
           numericInput("end_bp_position", "Enter End Base Pair Position in Mbp:",
-                       value = 31.5)
+                       value = 31)
         ),
         conditionalPanel(
           condition = "input.input_range == 'Comma-separated List of SNP RS IDs'",
@@ -76,7 +76,12 @@ PGS_portability_app <- function() {
       mainPanel(
         fluidRow(width = 10,
                  column(10,
-                   verbatimTextOutput("error_message")
+                        htmlOutput("error_message")
+                 )
+        ),
+        fluidRow(width = 10,
+                 column(10,
+                        verbatimTextOutput("error_message2")
                  )
         ),
         fluidRow(width = 9, 
@@ -87,12 +92,7 @@ PGS_portability_app <- function() {
                  tableOutput("table1")
         ),
         fluidRow(width = 10, 
-                 plotOutput("histogram"),
-                 h3("Figure 1:"),
-                 h5("The distribution of the relative accuracy estimates for the selected target ancestry (blue).
-                    The distribution of the selected input SNPs is displayed in the violin plot (purple). If 
-                    the number of SNPs selected is not sufficiently large for a distribution, the estimates are 
-                    shown with vertical lines (purple).")
+          plotOutput("histogram")
         ),
         fluidRow(width = 9, 
                  h3("Table 2:"),
@@ -336,14 +336,59 @@ PGS_portability_app <- function() {
     )
     
     output$error_message <- renderText({
-      if (is.null(filtered_snp_data())) {
-        "Invalid inputs. Range of entries must be within-chromosome;\n\ a gene name, SNP RS IDs, or single BP position entry must be\n in the UK Biobank array."
+      filtered_data <- filtered_snp_data()
+      
+      if (is.null(filtered_data)) {
+        return(
+          HTML(paste("<div style='white-space: pre-wrap;'><font color=\"#EB5406\" size=\"4\"><b>",
+                     "Invalid inputs. Note that if an input is monomorphic for the\n",
+                     "selected ancestry group it is not a valid input for that group.\n",
+                     "</b></font><br></div>")
+          )
+        )
       } else {
         return(NULL)
       }
     })
+    
+    output$error_message2 <- renderText({
+      
+      filtered_data <- filtered_snp_data()
+      
+      if (is.null(filtered_data)) {
+        
+        if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "SNP RS ID") {
+          return("Error: Note that the range of entries must be within-chromosome and SNP RS\nIDs must be in the UK Biobank genotyping array and are case sensitive.")
+        }
+        
+        if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "Base Pair Position & Chromosome") {
+          return("Error: Note that the range of entries must be within-chromosome and\nin Mbp units.")
+        }
+        
+        if (input$input_range == "Comma-separated List of SNP RS IDs") {
+          return("Error: Note that the comma-separated list of SNP RS IDs should not\nhave any spaces and only valid SNP RS IDs are allowed.")
+        }
+        
+        if (input$input_range == "Single Gene") {
+          return("Error: Note that gene name must be annotated in the UK Biobank array\nand is case sensitive.")
+        }
+        
+        if (input$input_range == "Single Marker" && input$input_type == "SNP RS ID") {
+          return("Error: Note that the SNP RS ID must be in the UK Biobank genotyping\narray and is case sensitive.")
+        }
+        
+        if (input$input_range == "Single Marker" && input$input_type == "Base Pair Position & Chromosome") {
+          return("Error: Note that a single BP position entry must be in the UK Biobank\narray exactly and in base pair units.")
+        }
+        
+      } else {
+        return(NULL)
+      }
+    })
+  
   }
   
   # Run
   shinyApp(ui = ui, server = server)
+                             
 }
