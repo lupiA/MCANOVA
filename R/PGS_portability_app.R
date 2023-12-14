@@ -92,7 +92,7 @@ PGS_portability_app <- function() {
                  tableOutput("table1")
         ),
         fluidRow(width = 10, 
-          plotOutput("histogram")
+          plotOutput("histogram", height="auto")
         ),
         fluidRow(width = 9, 
                  h3("Table 2:"),
