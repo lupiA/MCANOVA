@@ -316,7 +316,7 @@ PGS_portability_app <- function() {
             theme.ggplot
         }
       }
-    }, height=function() { session$clientData$output_histogram_width * 0.75 })
+    }, height=function() { session$clientData$output_histogram_width * 0.6 })
     
     output$download_table <- downloadHandler(
       filename = function() {
