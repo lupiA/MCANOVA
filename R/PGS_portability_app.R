@@ -60,7 +60,7 @@ PGS_portability_app <- function() {
         numericInput("start_bp_position", "Enter Start Base Pair Position in Mbp (e.g., part of the MHC region):",
                      value = 29.75),
         numericInput("end_bp_position", "Enter End Base Pair Position in Mbp:",
-                     value = 30,1)
+                     value = 31)
       ),
       conditionalPanel(
         condition = "input.input_range == 'Comma-separated List of SNP RS IDs'",
