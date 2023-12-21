@@ -127,9 +127,13 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
  MAP_example$R_squared_across <- NA
 
 # Set parameters for MC-ANOVA
- lambda <- 1e-8 # a small constant added to the diagonals of X'X to avoid numerical errors when some SNPs are in perfect LD
- nRep <- 300 # number of Monte Carlo simulations
- nQTL <- 3 # numbre of causal variants
+
+# a small constant added to the diagonals of X'X to avoid numerical errors when some SNPs are in perfect LD
+ lambda <- 1e-8
+# number of Monte Carlo simulations
+ nRep <- 300
+# number of causal variants
+ nQTL <- 3
 
 # Loop over segments and run MC-ANOVA
  for (i in min(MAP_example$segments):max(MAP_example$segments)) {
