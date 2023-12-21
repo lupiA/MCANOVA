@@ -172,9 +172,9 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 
 #### Expected outputs
 
--**MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, columns 5 and 6 containing the within-ancestry group MC-ANOVA correlation estimates and standard errors, columns 7 and 8 containing the across-ancestry group MC-ANOVA correlation estimates and standard errors, and columns 9 and 10 containing the within-ancestry and across-ancestry R-squared MC-ANOVA estimates.
--**RA**: a length 500 vector of Relative Accuracy estimates.
--**Interactive shiny app interface.**
+  - **MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, columns 5 and 6 containing the within-ancestry group MC-ANOVA correlation estimates and standard errors, columns 7 and 8 containing the across-ancestry group MC-ANOVA correlation estimates and standard errors, and columns 9 and 10 containing the within-ancestry and across-ancestry R-squared MC-ANOVA estimates.
+  - **RA**: a length 500 vector of Relative Accuracy estimates.
+  - **Interactive shiny app interface.**
 
 All demos should take only a few seconds to run.
 
