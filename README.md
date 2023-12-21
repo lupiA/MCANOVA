@@ -66,6 +66,8 @@ To install the development version from GitHub:
 
 
 ```r
+ library(MCANOVA)
+
 # Genotype map
  data(geno_map_example)
 
