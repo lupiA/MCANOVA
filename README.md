@@ -2,7 +2,7 @@
 
 The MC-ANOVA R package provides:
   
-  - **MCANOVA**: A function to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
+  - **MC_ANOVA**: A function to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
   - **Maps of the Relative Accuracy** of European-derived local genomic scores for African, Caribbean, East Asian, and South Asian ancestry groups.
   - **A Shiny App** providing a graphical interface to the Relative Accuracy maps.
   - **Tools** that, together with `MC_ANOVA()` can be used develop Relative Accuracy maps.
@@ -170,7 +170,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 
 [Back](#MENUE)
 
-#### Expected outputs
+### Expected outputs
 
   - **MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, columns 5 and 6 containing the within-ancestry group `MC_ANOVA()` correlation estimates and standard errors, columns 7 and 8 containing the across-ancestry group `MC_ANOVA()` correlation estimates and standard errors, and columns 9 and 10 containing the within-ancestry and across-ancestry R-squared `MC_ANOVA()` estimates.
   - **RA**: a length 500 vector of Relative Accuracy estimates.
@@ -178,7 +178,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 
 All demos should take only a few seconds to run.
 
-#### System Requirements
+### System Requirements
 
 Depends:
     R (>= 3.5.0)
@@ -187,7 +187,7 @@ Imports:
   ggplot2,
   BGData
 
-#### References
+### References
 
 - [Wang et al.(Nat. Comm., 2020)](https://www.nature.com/articles/s41467-020-17719-y) Theoretical and empirical quantification of the accuracy of polygenic scores in ancestry divergent populations. 
 - Lupi A., Vazquez A.I., and G. de los Campos (*submitted*). Mapping the Relative Accuracy of Cross-Ancestry Prediction.
