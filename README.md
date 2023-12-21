@@ -2,21 +2,27 @@
 
 The MC-ANOVA R package provides:
   
-  - **MCANOVA**: A function = to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
+  - **MCANOVA**: A function to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
   - **Maps of the Relative Accuracy** of European-derived local genomic scores for African, Caribbean, East Asian, and South Asian ancestry groups.
   - **A Shiny App** providing a graphical interface to the Relative Accuracy maps.
   - **Tools** that, together with `MCANOVA()` can be used develop Relative Accuracy maps.
 
 ## Installation
 
-To install the development version from GitHub:
-
-```r
- # install.packages("remotes")
-  remotes::install_github("lupiA/MCANOVA")
-  library(MCANOVA)
+To install the development version from GitHub, first install `remotes`: 
+```r 
+ install.packages("remotes")
+ library(remotes)
 ```
+   
+Then install the package:
+```r
+ install_github("lupiA/MCANOVA")
+ library(MCANOVA)
+```
+This should take about one minute for a typical computer when including installation of all non-base dependencies.
 
+This package should be compatible with Windows, Mac, and Linux operating systems and has been tested on Windows 7 & 10, macOS Monterey, and Linux CentOS 7.
 
 <div id="MENUE" />
 
@@ -158,10 +164,28 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
    MAP_example$R_squared_within[chunk[isCore]] <- out[1, 1]^2
    MAP_example$R_squared_across[chunk[isCore]] <- out[2, 1]^2
  }
+
+ RA <- MAP_example$R_squared_across/MAP_example$R_squared_within
 ```
 
 [Back](#MENUE)
 
+#### Expected outputs
+
+-**MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, columns 5 and 6 containing the within-ancestry group MC-ANOVA correlation estimates and standard errors, columns 7 and 8 containing the across-ancestry group MC-ANOVA correlation estimates and standard errors, and columns 9 and 10 containing the within-ancestry and across-ancestry R-squared MC-ANOVA estimates.
+-**RA**: a length 500 vector of Relative Accuracy estimates.
+-**Interactive shiny app interface.**
+
+All demos should take only a few seconds to run.
+
+#### System Requirements
+
+Depends:
+    R (>= 3.5.0)
+Imports:
+  shiny,
+  ggplot2,
+  BGData
 
 #### References
 
