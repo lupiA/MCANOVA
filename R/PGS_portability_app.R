@@ -163,9 +163,22 @@ server <- function(input, output, session) {
       
       else if (input$input_type == "Base Pair Position & Chromosome") {
         snps_chr <- snps[which(snps$Chromosome == input$chromosome_input),]
-        snp_data <- snps_chr[which(snps_chr$`BP position` == input$bp_position),
-                          c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                            "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+        if(length(which(snps_chr$`BP position` == input$bp_position))>0){
+          snp_data <- snps_chr[which(snps_chr$`BP position` == input$bp_position),
+                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
+                              "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+        } else {
+          lb <- which(snps_chr$`BP position` <= bp[i])
+          ub <- which(snps_chr$`BP position` <= bp[i])
+  
+          if(length(lb) == 1 & length(ub) == 1){
+            snp_data <- snps_chr[lb:ub,
+                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
+                              "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+          }
+
+        }        
+        
       }
       
     }  else if (input$input_range == "Range of Markers (within chromosome)") {
@@ -382,7 +395,7 @@ server <- function(input, output, session) {
       }
       
       if (input$input_range == "Single Marker" && input$input_type == "Base Pair Position & Chromosome") {
-        return("Error: Note that a single BP position entry must be in the UK Biobank\narray exactly and in base pair units.")
+        return("Error: Note that a single BP position entry must be within range\n and in base pair units.")
       }
       
     } else {
