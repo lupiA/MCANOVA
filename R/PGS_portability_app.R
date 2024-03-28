@@ -169,7 +169,7 @@ server <- function(input, output, session) {
                               "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
         } else {
           lb <- which.max(which(snps_chr$`BP position` <= input$bp_position))
-          ub <- which.min(which(snps_chr$`BP position` <= input$bp_position))
+          ub <- which.min(which(snps_chr$`BP position` >= input$bp_position))
   
           if(length(lb) == 1 & length(ub) == 1){
             tmp_data <- snps_chr[lb:ub,
