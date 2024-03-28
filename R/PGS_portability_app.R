@@ -168,8 +168,8 @@ server <- function(input, output, session) {
                             c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
                               "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
         } else {
-          lb <- which(snps_chr$`BP position` <= input$bp_position)
-          ub <- which(snps_chr$`BP position` <= input$bp_position)
+          lb <- which.max(snps_chr$`BP position` <= input$bp_position)
+          ub <- which.min(snps_chr$`BP position` <= input$bp_position)
   
           if(length(lb) == 1 & length(ub) == 1){
             tmp_data <- snps_chr[lb:ub,
