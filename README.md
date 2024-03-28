@@ -17,6 +17,7 @@ To install the development version from GitHub, first install `remotes`:
    
 Then install the package:
 ```r
+ # detach("package:MCANOVA", unload = TRUE)
  install_github("lupiA/MCANOVA")
  library(MCANOVA)
 ```
