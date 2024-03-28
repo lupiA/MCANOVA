@@ -172,9 +172,21 @@ server <- function(input, output, session) {
           ub <- which(snps_chr$`BP position` <= bp[i])
   
           if(length(lb) == 1 & length(ub) == 1){
-            snp_data <- snps_chr[lb:ub,
+            tmp_data <- snps_chr[lb:ub,
                             c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
                               "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+            snp_data <- tmp_data[1,]
+            snp_data[, "SNP"] <- paste0(tmp_data[1, "SNP"], "; ", tmp_data[2, "SNP"])
+            snp_data[, "Allele"] <- paste0(tmp_data[1, "Allele"], "; ", tmp_data[2, "Allele"])
+            snp_data[, "BP position"] <- paste0(tmp_data[1, "BP position"], "; ", tmp_data[2, "BP position"])
+            snp_data[, "Gene"] <- paste0(tmp_data[1, "Gene"], "; ", tmp_data[2, "Gene"])
+            
+            snp_data[, "Relative Accuracy"] <- mean(tmp_data[, "Relative Accuracy"],na.rm=T)
+            snp_data[, paste0("Corr. EU\u2192", ancestry_label())] <- mean(tmp_data[, paste0("Corr. EU\u2192", ancestry_label())],na.rm=T)
+            snp_data[, "Corr. EU\u2192EU"] <- mean(tmp_data[, "Corr. EU\u2192EU"],na.rm=T)
+            snp_data[, "Corr. EU\u2192EU S.E."] <- mean(tmp_data[, "Corr. EU\u2192EU S.E."],na.rm=T)
+            snp_data[, paste0("Corr. EU\u2192", ancestry_label(), " S.E.")] <- mean(tmp_data[, paste0("Corr. EU\u2192", ancestry_label(), " S.E.")],na.rm=T)
+
           }
 
         }        
