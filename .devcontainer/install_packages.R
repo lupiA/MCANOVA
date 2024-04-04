@@ -38,6 +38,8 @@ for(i in 1:nrow(packages_df)){
                              repos = "http://cran.rstudio.com/")
   }
 
+  install_github("lupiA/MCANOVA")
+
   if(!packages_df$package[i] %in% rownames(installed.packages()) ||
      (packages_df$package[i] %in% rownames(installed.packages()) &&
       packageVersion(packages_df$package[i]) != packages_df$version[i])){
