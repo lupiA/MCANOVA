@@ -7,6 +7,7 @@ PGS_portability_app <- function() {
   
   library(shiny)
   library(ggplot2)
+  library(MCANOVA)
   
   # Define the UI
   ui <- fluidPage(
