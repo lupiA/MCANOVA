@@ -72,7 +72,11 @@ PGS_portability_app <- function() {
         condition = "input.input_range == 'Single Gene'",
         textInput("gene_name", "Enter Gene Name (e.g., ABCG2):",
                   value = "ABCG2")
-      )
+      ),
+      br(),
+      radioButtons("dataset.input", "SNP Set:",
+                   choices = c("UK Biobank Arrays", "HapMap Variants")
+      ),
     ),
     mainPanel(
       fluidRow(width = 10,
@@ -118,7 +122,11 @@ PGS_portability_app <- function() {
 server <- function(input, output, session) {
   
   dat <- reactive({
-    dat <- MCANOVA::MAP_UKB
+    if(input$dataset.input == "UK Biobank Arrays"){
+      dat <- MCANOVA::MAP_UKB
+    } else{
+      dat <- MCANOVA::MAP_HAPMAP
+    }
   })
   
   ancestry_label <- reactive({
