@@ -61,7 +61,7 @@ PGS_portability_app <- function() {
         numericInput("start_bp_position", "Enter Start Base Pair Position in Mbp (e.g., part of the MHC region):",
                      value = 29.75),
         numericInput("end_bp_position", "Enter End Base Pair Position in Mbp:",
-                     value = 30.25)
+                     value = 30.5)
       ),
       conditionalPanel(
         condition = "input.input_range == 'Comma-separated List of SNP RS IDs'",
@@ -73,7 +73,7 @@ PGS_portability_app <- function() {
         textInput("gene_name", "Enter Gene Name (e.g., ABCG2):",
                   value = "ABCG2")
       ),
-      br(),br(),br(),br(),br(),
+      br(),br(),br(),br(),br(),br(),br(),br(),br(),
       radioButtons("dataset.input", "SNP Set (Note, the HapMap set is not recommended.):",
                    choices = c("UK Biobank Arrays", "HapMap Variants")
       ),
@@ -99,10 +99,11 @@ PGS_portability_app <- function() {
       fluidRow(width = 10, 
         plotOutput("histogram"),
         h3("Figure 1:"),
-        h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue for the 
-           selected target ancestry group. The relative accuracy distribution for the subset of selected variants is
-           shown in purple. The number of variants entering into the subset (if applicable) is noted in the 
-           upper-right corner. The x-axis has been capped at a RA of 2.5 for plotting purposes.")
+        h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue 
+           for the selected target ancestry group. The relative accuracy distribution for the subset 
+           of selected variants is shown in purple. The number of variants entering into the subset 
+           (if applicable) is noted in the upper-right corner. The x-axis with the HapMap variants 
+           has been capped at a RA of 4 for plotting purposes.")
       ),
       fluidRow(width = 9, 
                h3("Table 2:"),
@@ -541,27 +542,34 @@ server <- function(input, output, session) {
     if (is.null(filtered_data)) {
       
       if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "SNP RS ID") {
-        return("Error: Note that the range of entries must be within-chromosome and SNP RS\nIDs must be in the UK Biobank genotyping array and are case sensitive.")
+        return("Error: Note that the range of entries must be within-chromosome\n
+            and SNP RS IDs must be in the UK Biobank genotyping array\n
+            (or HapMap if selected) and are case sensitive.")
       }
       
       if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "Base Pair Position & Chromosome") {
-        return("Error: Note that the range of entries must be within-chromosome and\nin Mbp units.")
+        return("Error: Note that the range of entries must be within-chromosome\n
+            and in Mbp units.")
       }
       
       if (input$input_range == "Comma-separated List of SNP RS IDs") {
-        return("Error: Note that the comma-separated list of SNP RS IDs should not\nhave any spaces and only valid SNP RS IDs are allowed.")
+        return("Error: Note that the comma-separated list of SNP RS IDs should not\n
+            have any spaces and only valid SNP RS IDs are allowed.")
       }
       
       if (input$input_range == "Single Gene") {
-        return("Error: Note that gene name must be annotated in the UK Biobank array\nand is case sensitive.")
+        return("Error: Note that gene name must be annotated in the UK Biobank\n
+          array (or HapMap if selected) and is case sensitive.")
       }
       
       if (input$input_range == "Single Marker" && input$input_type == "SNP RS ID") {
-        return("Error: Note that the SNP RS ID must be in the UK Biobank genotyping\narray and is case sensitive.")
+        return("Error: Note that the SNP RS ID must be in the UK Biobank\n
+          genotyping array and is case sensitive.")
       }
       
       if (input$input_range == "Single Marker" && input$input_type == "Base Pair Position & Chromosome") {
-        return("Error: Note that a single BP position entry must be within range\n and in base pair units.")
+        return("Error: Note that a single BP position entry must be within\n
+          range and in base pair units.")
       }
       
     } else {
