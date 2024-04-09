@@ -88,8 +88,8 @@ PGS_portability_app <- function() {
       fluidRow(width = 9, 
                h3("Table 1:"),
                h5("The PGS portability estimates averaged across the selected input SNPs (relative 
-                  accuracy, cross-ancestry correlation [EU to target ancestry], and within-ancestry 
-                  correlation [EU to EU])."),
+                  accuracy, cross-ancestry R-squared [EU to target ancestry], and within-ancestry 
+                  R-squared [EU to EU])."),
                tableOutput("table1")
       ),
       fluidRow(width = 10, 
@@ -104,8 +104,9 @@ PGS_portability_app <- function() {
                h5("Relative accuracy map for each of the selected variants and target ancestry group. 
                   Each row is a SNP and the columns contain SNP information (rsID, chromosome, 
                   base pair position, reference allele), PGS portability measures (relative 
-                  accuracy, cross-ancestry correlation [EU to target ancestry], and within-ancestry 
-                  correlation [EU to EU]), and the annotated gene name if available."),
+                  accuracy, cross-ancestry R-squared [EU to target ancestry], and within-ancestry 
+                  R-squared [EU to EU]), corresponding SEs and MC error for each portability measure, 
+                  and the annotated gene name if available."),
                downloadButton("download_table", "Download Table"),
                tableOutput("table2")
       )
@@ -117,7 +118,7 @@ PGS_portability_app <- function() {
 server <- function(input, output, session) {
   
   dat <- reactive({
-    dat <- MCANOVA::MAP
+    dat <- MCANOVA::MAP_UKB
   })
   
   ancestry_label <- reactive({
@@ -150,32 +151,59 @@ server <- function(input, output, session) {
     if(input$ancestry %in% c("African", "East Asian")){
       snps <- snps[-(which(is.na(snps[,7]))), ]
     }
-    colnames(snps)[6:11] <- c("Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), 
-                              "Corr. EU\u2192EU S.E.", "Target Ancestry")
+    colnames(snps)[6:15] <- c("Relative Accuracy", 
+                              paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", 
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU",
+                              "Target Ancestry")
+    
     snp_data <- NULL
     
     if (input$input_range == "Single Marker") {
       
       if (input$input_type == "SNP RS ID") {
         snp_data <- snps[which(snps$SNP == input$rs_id),
-                         c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                           "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                         c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                           "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                           "MC Error RA", 
+                           "S.E. RA", 
+                           paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                           paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                           "MC Error Rsq. EU\u2192EU",
+                           "S.E. Rsq. EU\u2192EU")]
       } 
       
       else if (input$input_type == "Base Pair Position & Chromosome") {
         snps_chr <- snps[which(snps$Chromosome == input$chromosome_input),]
         if(length(which(snps_chr$`BP position` == input$bp_position))>0){
           snp_data <- snps_chr[which(snps_chr$`BP position` == input$bp_position),
-                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                              "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
         } else {
           lb <- max(which(snps_chr$`BP position` <= input$bp_position))
           ub <- min(which(snps_chr$`BP position` >= input$bp_position))
   
           if(length(lb) == 1 & length(ub) == 1){
             tmp_data <- snps_chr[lb:ub,
-                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                              "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                            c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
             snp_data <- tmp_data[1,]
             snp_data[, "SNP"] <- paste0(tmp_data[1, "SNP"], "; ", tmp_data[2, "SNP"])
             snp_data[, "Allele"] <- paste0(tmp_data[1, "Allele"], "; ", tmp_data[2, "Allele"])
@@ -183,11 +211,15 @@ server <- function(input, output, session) {
             snp_data[, "Gene"] <- paste0(tmp_data[1, "Gene"], "; ", tmp_data[2, "Gene"])
             
             snp_data[, "Relative Accuracy"] <- mean(tmp_data[, "Relative Accuracy"],na.rm=T)
-            snp_data[, paste0("Corr. EU\u2192", ancestry_label())] <- mean(tmp_data[, paste0("Corr. EU\u2192", ancestry_label())],na.rm=T)
-            snp_data[, "Corr. EU\u2192EU"] <- mean(tmp_data[, "Corr. EU\u2192EU"],na.rm=T)
-            snp_data[, "Corr. EU\u2192EU S.E."] <- mean(tmp_data[, "Corr. EU\u2192EU S.E."],na.rm=T)
-            snp_data[, paste0("Corr. EU\u2192", ancestry_label(), " S.E.")] <- mean(tmp_data[, paste0("Corr. EU\u2192", ancestry_label(), " S.E.")],na.rm=T)
+            snp_data[, paste0("Rsq. EU\u2192", ancestry_label())] <- mean(tmp_data[, paste0("Rsq. EU\u2192", ancestry_label())],na.rm=T)
+            snp_data[, "Rsq. EU\u2192EU"] <- mean(tmp_data[, "Rsq. EU\u2192EU"],na.rm=T)
 
+            snp_data[, "S.E. RA"] <- mean(tmp_data[, "S.E. RA"],na.rm=T)
+            snp_data[, paste0("S.E. Rsq. EU\u2192", ancestry_label())] <- mean(tmp_data[, paste0("S.E. Rsq. EU\u2192", ancestry_label())],na.rm=T)
+            snp_data[, "S.E. Rsq. EU\u2192EU"] <- mean(tmp_data[, "S.E. Rsq. EU\u2192EU"],na.rm=T)
+            snp_data[, "MC Error RA"] <- mean(tmp_data[, "MC Error RA"],na.rm=T)
+            snp_data[, paste0("MC Error Rsq. EU\u2192", ancestry_label())] <- mean(tmp_data[, paste0("MC Error Rsq. EU\u2192", ancestry_label())],na.rm=T)
+            snp_data[, "MC Error Rsq. EU\u2192EU"] <- mean(tmp_data[, "MC Error Rsq. EU\u2192EU"],na.rm=T)
           }
 
         }        
@@ -203,8 +235,14 @@ server <- function(input, output, session) {
         if (length(start_snp_idx_1) > 0 && length(end_snp_idx_1) > 0 &&
             snps$Chromosome[start_snp_idx_1] == snps$Chromosome[end_snp_idx_1]) {
           snp_data <- snps[start_snp_idx_1:end_snp_idx_1,
-                           c("Target Ancestry", "SNP","Relative Accuracy",paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                             "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                           c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
           
         }
         
@@ -216,8 +254,14 @@ server <- function(input, output, session) {
         } else if(length(start_bp_input():end_bp_input()) > 0 && start_bp_input() < end_bp_input() && 
                   start_bp_input() > 0 && nrow(snps)>0){
           snp_data <- snps[which(snps$`BP position` %in% start_bp_input():end_bp_input()),
-                           c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                             "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                           c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
         }
       }
     }  else if (input$input_range == "Comma-separated List of SNP RS IDs") {
@@ -225,8 +269,14 @@ server <- function(input, output, session) {
       
       if (length(snps_in_list) > 0) {
         snp_data <- snps[which(snps$SNP %in% snps_in_list),
-                         c("Target Ancestry", "SNP","Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                           "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                         c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
       }
       
     }  else if (input$input_range == "Single Gene") {
@@ -234,8 +284,14 @@ server <- function(input, output, session) {
       
       if (length(snps_in_list) > 0) {
         snp_data <- snps[which(snps$SNP %in% snps_in_list),
-                         c("Target Ancestry", "SNP", "Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", "Chromosome", "BP position", 
-                           "Allele", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), "Corr. EU\u2192EU S.E.","Gene")]
+                         c("Target Ancestry", "SNP","Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), 
+                              "Rsq. EU\u2192EU", "Chromosome", "BP position", "Allele", "Gene",
+                              "MC Error RA", 
+                              "S.E. RA", 
+                              paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                              paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                              "MC Error Rsq. EU\u2192EU",
+                              "S.E. Rsq. EU\u2192EU")]
       }
     }
     
@@ -251,8 +307,15 @@ server <- function(input, output, session) {
     if(input$ancestry %in% c("African", "East Asian")){
       hist <- hist[-(which(is.na(hist[,7]))), ]
     }
-    colnames(hist)[6:10] <- c("Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU", paste0("Corr. EU\u2192", ancestry_label(), " S.E."), 
-                              "Corr. EU\u2192EU S.E.")
+  colnames(hist)[6:15] <- c("Relative Accuracy", 
+                        paste0("Rsq. EU\u2192", ancestry_label()), 
+                        "Rsq. EU\u2192EU", 
+                        "MC Error RA", 
+                        "S.E. RA", 
+                        paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                        paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                        "MC Error Rsq. EU\u2192EU",
+                        "S.E. Rsq. EU\u2192EU")
     hist_data <- hist[ , c("Relative Accuracy","Cohort")]
     if (nrow(hist_data) == 0) {
       hist_data <- NULL
@@ -266,7 +329,7 @@ server <- function(input, output, session) {
   output$table1 <- renderTable({
     if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
       if (!is.null(filtered_snp_data())) {
-        averages <- colMeans(filtered_snp_data()[ , c("Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), "Corr. EU\u2192EU")], na.rm = TRUE)
+        averages <- colMeans(filtered_snp_data()[ , c("Relative Accuracy", paste0("Rsq. EU\u2192", ancestry_label()), "Rsq. EU\u2192EU")], na.rm = TRUE)
         if (input$input_range == "Range of Markers (within chromosome)") {
           data.frame("Metric" = names(averages), "Average" = averages)
         } else if (input$input_range == "Single Marker") {
@@ -283,10 +346,18 @@ server <- function(input, output, session) {
   output$table2 <- renderTable({
     if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
       if (!is.null(filtered_snp_data())) {
-        modified_table <- filtered_snp_data()[, c("Target Ancestry", "SNP", "Chromosome", "BP position", 
-                                                  "Allele", "Relative Accuracy", paste0("Corr. EU\u2192", ancestry_label()), 
-                                                  paste0("Corr. EU\u2192", ancestry_label(), " S.E."), 
-                                                  "Corr. EU\u2192EU", "Corr. EU\u2192EU S.E.", "Gene")]
+        modified_table <- filtered_snp_data()[, c("Target Ancestry", "SNP", "Chromosome", "BP position",  
+                                                  "Relative Accuracy", 
+                                                  paste0("Rsq. EU\u2192", ancestry_label()), 
+                                                  "Rsq. EU\u2192EU",
+                                                  "MC Error RA", 
+                                                  "S.E. RA", 
+                                                  paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                                                  paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                                                  "MC Error Rsq. EU\u2192EU",
+                                                  "S.E. Rsq. EU\u2192EU")]
+                                                  "Allele", "Gene")]
+
         colnames(modified_table)[3]="Chr"
         data.frame(modified_table,check.names = FALSE)
       }
@@ -354,12 +425,21 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       if (!is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_snp_data())) {
-        filtered_table <- filtered_snp_data()[, c("Target Ancestry", "SNP", "Chromosome", "BP position", "Allele", "Gene", "Relative Accuracy", 
-                                                  paste0("Corr. EU\u2192", ancestry_label()), paste0("Corr. EU\u2192", ancestry_label(), " S.E."), 
-                                                  "Corr. EU\u2192EU", "Corr. EU\u2192EU S.E.")]
+        filtered_table <- filtered_snp_data()[, c("Target Ancestry", "SNP", "Chromosome", "BP position",  
+                                                  "Relative Accuracy", 
+                                                  paste0("Rsq. EU\u2192", ancestry_label()), 
+                                                  "Rsq. EU\u2192EU",
+                                                  "MC Error RA", 
+                                                  "S.E. RA", 
+                                                  paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
+                                                  paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
+                                                  "MC Error Rsq. EU\u2192EU",
+                                                  "S.E. Rsq. EU\u2192EU")]
+                                                  "Allele", "Gene")]
         data.frame(filtered_table, check.names = FALSE)
-        colnames(filtered_table)[c(1,4,7)] <- c("Ancestry", "BP_position", "RA")
-        colnames(filtered_table)[8:11] <- c("Corr.1_to_2", "Corr.1_to_2.SE", "Corr.1_to_1", "Corr.1_to_1.SE")
+        colnames(filtered_table)[c(1,4,5)] <- c("Ancestry", "BP_position", "RA")
+        colnames(filtered_table)[6:7] <- c("Rsq.across", "Rsq.within")
+        colnames(filtered_table)[8:13] <- c("MC_error_RA", "SE_RA","MC_error_Rsq.across","SE_Rsq.across","MC_error_Rsq.within","SE_Rsq.within")
         write.csv(filtered_table, file, row.names = FALSE)
       }
     }
