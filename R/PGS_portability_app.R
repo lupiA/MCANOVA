@@ -307,7 +307,7 @@ server <- function(input, output, session) {
     if(input$ancestry %in% c("African", "East Asian")){
       hist <- hist[-(which(is.na(hist[,7]))), ]
     }
-  colnames(hist)[6:15] <- c("Relative Accuracy", 
+  colnames(hist)[6:14] <- c("Relative Accuracy", 
                         paste0("Rsq. EU\u2192", ancestry_label()), 
                         "Rsq. EU\u2192EU", 
                         "MC Error RA", 
