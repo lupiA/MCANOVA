@@ -397,7 +397,7 @@ server <- function(input, output, session) {
           annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
                    label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
                    color = "#2E0854", size = 6, fontface = 2) +
-          xlim = c(0,2.5)+
+          xlim(0,2.5) +
           theme.ggplot
         
       } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
@@ -418,7 +418,7 @@ server <- function(input, output, session) {
             annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
                      label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim = c(0,2.5)+
+            xlim(0,2.5) +
             theme.ggplot
         } else {
           p1 +
@@ -426,7 +426,7 @@ server <- function(input, output, session) {
             geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
             geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim = c(0,2.5)+
+            xlim(0,2.5) +
             theme.ggplot
         }
       }
@@ -450,7 +450,7 @@ server <- function(input, output, session) {
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
-          xlim = c(0,2.5)+
+          xlim(0,2.5) +
           annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
                    label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
                    color = "#2E0854", size = 6, fontface = 2) +
@@ -462,11 +462,6 @@ server <- function(input, output, session) {
         snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
         
         p1 <- ggplot()
-        if(input$ancestry == "East Asian"){
-          y_val = 10000
-        } else{
-          y_val = 20000
-        }
         if (length(table(snp_ra)) > 10) {
           p1 +
             geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
@@ -474,7 +469,7 @@ server <- function(input, output, session) {
             annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
                      label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim = c(0,2.5)+
+            xlim(0,2.5) +
             theme.ggplot
         } else {
           p1 +
@@ -482,7 +477,7 @@ server <- function(input, output, session) {
             geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
             geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim = c(0,2.5)+
+            xlim(0,2.5) +
             theme.ggplot
         }
       }
