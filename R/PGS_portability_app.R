@@ -61,7 +61,7 @@ PGS_portability_app <- function() {
         numericInput("start_bp_position", "Enter Start Base Pair Position in Mbp (e.g., part of the MHC region):",
                      value = 29.75),
         numericInput("end_bp_position", "Enter End Base Pair Position in Mbp:",
-                     value = 30.25)
+                     value = 30.5)
       ),
       conditionalPanel(
         condition = "input.input_range == 'Comma-separated List of SNP RS IDs'",
@@ -72,7 +72,11 @@ PGS_portability_app <- function() {
         condition = "input.input_range == 'Single Gene'",
         textInput("gene_name", "Enter Gene Name (e.g., ABCG2):",
                   value = "ABCG2")
-      )
+      ),
+      br(),br(),br(),br(),br(),br(),br(),br(),br(),
+      radioButtons("dataset.input", "SNP Set (Note, the HapMap set is not recommended.):",
+                   choices = c("UK Biobank Arrays", "HapMap Variants")
+      ),
     ),
     mainPanel(
       fluidRow(width = 10,
@@ -95,9 +99,11 @@ PGS_portability_app <- function() {
       fluidRow(width = 10, 
         plotOutput("histogram"),
         h3("Figure 1:"),
-        h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue for the 
-        selected target ancestry group. The relative accuracy distribution for the subset of selected variants is
-           shown in purple. The number of variants entering into the subset is noted in the upper-right corner.")
+        h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue 
+           for the selected target ancestry group. The relative accuracy distribution for the subset 
+           of selected variants is shown in purple. The number of variants entering into the subset 
+           (if applicable) is noted in the upper-right corner. The x-axis with the HapMap variants 
+           has been capped at a RA of 4 for plotting purposes.")
       ),
       fluidRow(width = 9, 
                h3("Table 2:"),
@@ -118,7 +124,11 @@ PGS_portability_app <- function() {
 server <- function(input, output, session) {
   
   dat <- reactive({
-    dat <- MCANOVA::MAP_UKB
+    if(input$dataset.input == "UK Biobank Arrays"){
+      dat <- MCANOVA::MAP_UKB
+    } else{
+      dat <- MCANOVA::MAP_HAPMAP
+    }
   })
   
   ancestry_label <- reactive({
@@ -365,56 +375,120 @@ server <- function(input, output, session) {
   })
   
   output$histogram <- renderPlot({
-    theme.ggplot <- theme(legend.position = "none",
-                      axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
-                      panel.background = element_rect(fill = "aliceblue", colour = "grey",
-                      linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
-                      axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
-                      axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
-                      panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
-                      plot.title = element_blank())
-    if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-      ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
-      snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
-      snp_percentile <- ecdf(ra_values)(snp_ra) * 100
-      
-      label_text <- paste0(round(snp_percentile, 2), "%")
-      ggplot() +
-        geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
-        geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
-        geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
-        labs(x = "Relative Accuracy", y = "Frequency") +
-        annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
-                 label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
-                 color = "#2E0854", size = 6, fontface = 2) +
-        theme.ggplot
-      
-    } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
-               input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-      ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
-      snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
-      
-      p1 <- ggplot()
-      if(input$ancestry == "East Asian"){
-        y_val = 10000
-      } else{
-        y_val = 20000
-      }
-      if (length(table(snp_ra)) > 10) {
-        p1 +
-          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
-          geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
-          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
-                   label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
-          labs(x = "Relative Accuracy", y = "Frequency") +
-          theme.ggplot
-      } else {
-        p1 +
-          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+    if(input$dataset.input == "UK Biobank Arrays"){
+      theme.ggplot <- theme(legend.position = "none",
+                        axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
+                        panel.background = element_rect(fill = "aliceblue", colour = "grey",
+                        linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
+                        axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
+                        axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
+                        panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
+                        plot.title = element_blank())
+      if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        snp_percentile <- ecdf(ra_values)(snp_ra) * 100
+        
+        label_text <- paste0(round(snp_percentile, 2), "%")
+        ggplot() +
+          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
+          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
+                   label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
+                   color = "#2E0854", size = 6, fontface = 2) +
           theme.ggplot
+        
+      } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
+                 input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        
+        p1 <- ggplot()
+        if(input$ancestry == "East Asian"){
+          y_val = 10000
+        } else{
+          y_val = 20000
+        }
+        if (length(table(snp_ra)) > 10) {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
+            geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
+            annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
+                     label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            theme.ggplot
+        } else {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
+            geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+            geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            theme.ggplot
+        }
+      }
+    } else{
+      theme.ggplot <- theme(legend.position = "none",
+                        axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
+                        panel.background = element_rect(fill = "aliceblue", colour = "grey",
+                        linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
+                        axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
+                        axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
+                        panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
+                        plot.title = element_blank())
+      if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        snp_percentile <- ecdf(ra_values)(snp_ra) * 100
+        
+        label_text <- paste0(round(snp_percentile, 2), "%")
+        suppressWarnings(print(ggplot() +
+          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
+          geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+          geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+          labs(x = "Relative Accuracy", y = "Frequency") +
+          xlim(0,4) +
+          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
+                   label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
+                   color = "#2E0854", size = 6, fontface = 2) +
+          theme.ggplot))
+        
+      } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
+                 input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        
+        p1 <- ggplot()
+        if(input$ancestry == "East Asian"){
+          y_val = 200000
+        } else if(input$ancestry == "South Asian"){
+          y_val = 400000
+        } else if(input$ancestry == "African"){
+          y_val = 75000
+        } else if(input$ancestry == "Caribbean"){
+          y_val = 100000
+        }
+        
+        p1 <- ggplot()
+        if (length(table(snp_ra)) > 10) {
+          suppressWarnings(print(p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
+            geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
+            annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
+                     label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim(0,4) +
+            theme.ggplot))
+        } else {
+          suppressWarnings(print(p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
+            geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+            geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim(0,4) +
+            theme.ggplot))
+        }
       }
     }
   })
@@ -468,27 +542,34 @@ server <- function(input, output, session) {
     if (is.null(filtered_data)) {
       
       if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "SNP RS ID") {
-        return("Error: Note that the range of entries must be within-chromosome and SNP RS\nIDs must be in the UK Biobank genotyping array and are case sensitive.")
+        return("Error: Note that the range of entries must be within-chromosome\n
+            and SNP RS IDs must be in the UK Biobank genotyping array\n
+            (or HapMap if selected) and are case sensitive.")
       }
       
       if (input$input_range == "Range of Markers (within chromosome)" && input$input_type2 == "Base Pair Position & Chromosome") {
-        return("Error: Note that the range of entries must be within-chromosome and\nin Mbp units.")
+        return("Error: Note that the range of entries must be within-chromosome\n
+            and in Mbp units.")
       }
       
       if (input$input_range == "Comma-separated List of SNP RS IDs") {
-        return("Error: Note that the comma-separated list of SNP RS IDs should not\nhave any spaces and only valid SNP RS IDs are allowed.")
+        return("Error: Note that the comma-separated list of SNP RS IDs should not\n
+            have any spaces and only valid SNP RS IDs are allowed.")
       }
       
       if (input$input_range == "Single Gene") {
-        return("Error: Note that gene name must be annotated in the UK Biobank array\nand is case sensitive.")
+        return("Error: Note that gene name must be annotated in the UK Biobank\n
+          array (or HapMap if selected) and is case sensitive.")
       }
       
       if (input$input_range == "Single Marker" && input$input_type == "SNP RS ID") {
-        return("Error: Note that the SNP RS ID must be in the UK Biobank genotyping\narray and is case sensitive.")
+        return("Error: Note that the SNP RS ID must be in the UK Biobank\n
+          genotyping array and is case sensitive.")
       }
       
       if (input$input_range == "Single Marker" && input$input_type == "Base Pair Position & Chromosome") {
-        return("Error: Note that a single BP position entry must be within range\n and in base pair units.")
+        return("Error: Note that a single BP position entry must be within\n
+          range and in base pair units.")
       }
       
     } else {
