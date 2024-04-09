@@ -446,7 +446,7 @@ server <- function(input, output, session) {
         
         label_text <- paste0(round(snp_percentile, 2), "%")
         ggplot() +
-          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
@@ -471,7 +471,7 @@ server <- function(input, output, session) {
         p1 <- ggplot()
         if (length(table(snp_ra)) > 10) {
           p1 +
-            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
             geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
             annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
                      label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
@@ -480,7 +480,7 @@ server <- function(input, output, session) {
             theme.ggplot
         } else {
           p1 +
-            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
             geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
             geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
             labs(x = "Relative Accuracy", y = "Frequency") +
