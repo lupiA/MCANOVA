@@ -44,8 +44,8 @@ This package should be compatible with Windows, Mac, and Linux operating systems
 ```r
  library(MCANOVA)
 
-# Relative Accuracy Map
- data(MAP)
+# Relative Accuracy Map (UK Biobank arrays)
+ data(MAP_UKB)
 ```
 
 [Back](#MENUE)
