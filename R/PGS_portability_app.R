@@ -390,14 +390,13 @@ server <- function(input, output, session) {
         
         label_text <- paste0(round(snp_percentile, 2), "%")
         ggplot() +
-          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
           annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
                    label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
                    color = "#2E0854", size = 6, fontface = 2) +
-          xlim(0,2.5) +
           theme.ggplot
         
       } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
@@ -413,20 +412,18 @@ server <- function(input, output, session) {
         }
         if (length(table(snp_ra)) > 10) {
           p1 +
-            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
             geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
             annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
                      label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim(0,2.5) +
             theme.ggplot
         } else {
           p1 +
-            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.03) +
             geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
             geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim(0,2.5) +
             theme.ggplot
         }
       }
@@ -445,16 +442,16 @@ server <- function(input, output, session) {
         snp_percentile <- ecdf(ra_values)(snp_ra) * 100
         
         label_text <- paste0(round(snp_percentile, 2), "%")
-        ggplot() +
+        suppressWarnings(print(ggplot() +
           geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
-          xlim(0,2.5) +
+          xlim(0,4) +
           annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
                    label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
                    color = "#2E0854", size = 6, fontface = 2) +
-          theme.ggplot
+          theme.ggplot))
         
       } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
                  input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
@@ -463,29 +460,33 @@ server <- function(input, output, session) {
         
         p1 <- ggplot()
         if(input$ancestry == "East Asian"){
-          y_val = 15000
-        } else{
-          y_val = 20000
+          y_val = 200000
+        } else if(input$ancestry == "South Asian"){
+          y_val = 400000
+        } else if(input$ancestry == "African"){
+          y_val = 75000
+        } else if(input$ancestry == "Caribbean"){
+          y_val = 100000
         }
         
         p1 <- ggplot()
         if (length(table(snp_ra)) > 10) {
-          p1 +
+          suppressWarnings(print(p1 +
             geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
             geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
             annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
                      label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim(0,2.5) +
-            theme.ggplot
+            xlim(0,4) +
+            theme.ggplot))
         } else {
-          p1 +
+          suppressWarnings(print(p1 +
             geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.06) +
             geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
             geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
             labs(x = "Relative Accuracy", y = "Frequency") +
-            xlim(0,2.5) +
-            theme.ggplot
+            xlim(0,4) +
+            theme.ggplot))
         }
       }
     }
