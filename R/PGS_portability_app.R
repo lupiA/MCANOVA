@@ -355,7 +355,7 @@ server <- function(input, output, session) {
                                                   paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
                                                   paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
                                                   "MC Error Rsq. EU\u2192EU",
-                                                  "S.E. Rsq. EU\u2192EU")]
+                                                  "S.E. Rsq. EU\u2192EU",
                                                   "Allele", "Gene")]
 
         colnames(modified_table)[3]="Chr"
@@ -434,7 +434,7 @@ server <- function(input, output, session) {
                                                   paste0("MC Error Rsq. EU\u2192", ancestry_label()), 
                                                   paste0("S.E. Rsq. EU\u2192", ancestry_label()), 
                                                   "MC Error Rsq. EU\u2192EU",
-                                                  "S.E. Rsq. EU\u2192EU")]
+                                                  "S.E. Rsq. EU\u2192EU",
                                                   "Allele", "Gene")]
         data.frame(filtered_table, check.names = FALSE)
         colnames(filtered_table)[c(1,4,5)] <- c("Ancestry", "BP_position", "RA")
