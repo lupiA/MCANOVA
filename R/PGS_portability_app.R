@@ -462,6 +462,13 @@ server <- function(input, output, session) {
         snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
         
         p1 <- ggplot()
+        if(input$ancestry == "East Asian"){
+          y_val = 15000
+        } else{
+          y_val = 20000
+        }
+        
+        p1 <- ggplot()
         if (length(table(snp_ra)) > 10) {
           p1 +
             geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
