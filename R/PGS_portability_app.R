@@ -73,8 +73,8 @@ PGS_portability_app <- function() {
         textInput("gene_name", "Enter Gene Name (e.g., ABCG2):",
                   value = "ABCG2")
       ),
-      br(),
-      radioButtons("dataset.input", "SNP Set:",
+      br(),br(),br(),br(),br(),
+      radioButtons("dataset.input", "SNP Set (Note, the HapMap set is not recommended.):",
                    choices = c("UK Biobank Arrays", "HapMap Variants")
       ),
     ),
@@ -100,8 +100,9 @@ PGS_portability_app <- function() {
         plotOutput("histogram"),
         h3("Figure 1:"),
         h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue for the 
-        selected target ancestry group. The relative accuracy distribution for the subset of selected variants is
-           shown in purple. The number of variants entering into the subset is noted in the upper-right corner.")
+           selected target ancestry group. The relative accuracy distribution for the subset of selected variants is
+           shown in purple. The number of variants entering into the subset (if applicable) is noted in the 
+           upper-right corner. The x-axis has been capped at a RA of 2.5 for plotting purposes.")
       ),
       fluidRow(width = 9, 
                h3("Table 2:"),
@@ -373,56 +374,117 @@ server <- function(input, output, session) {
   })
   
   output$histogram <- renderPlot({
-    theme.ggplot <- theme(legend.position = "none",
-                      axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
-                      panel.background = element_rect(fill = "aliceblue", colour = "grey",
-                      linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
-                      axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
-                      axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
-                      panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
-                      plot.title = element_blank())
-    if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-      ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
-      snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
-      snp_percentile <- ecdf(ra_values)(snp_ra) * 100
-      
-      label_text <- paste0(round(snp_percentile, 2), "%")
-      ggplot() +
-        geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
-        geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
-        geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
-        labs(x = "Relative Accuracy", y = "Frequency") +
-        annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
-                 label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
-                 color = "#2E0854", size = 6, fontface = 2) +
-        theme.ggplot
-      
-    } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
-               input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
-      ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
-      snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
-      
-      p1 <- ggplot()
-      if(input$ancestry == "East Asian"){
-        y_val = 10000
-      } else{
-        y_val = 20000
-      }
-      if (length(table(snp_ra)) > 10) {
-        p1 +
-          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
-          geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
-          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
-                   label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
-          labs(x = "Relative Accuracy", y = "Frequency") +
-          theme.ggplot
-      } else {
-        p1 +
+    if(input$dataset.input == "UK Biobank Arrays"){
+      theme.ggplot <- theme(legend.position = "none",
+                        axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
+                        panel.background = element_rect(fill = "aliceblue", colour = "grey",
+                        linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
+                        axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
+                        axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
+                        panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
+                        plot.title = element_blank())
+      if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        snp_percentile <- ecdf(ra_values)(snp_ra) * 100
+        
+        label_text <- paste0(round(snp_percentile, 2), "%")
+        ggplot() +
           geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
           geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
           geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
           labs(x = "Relative Accuracy", y = "Frequency") +
+          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
+                   label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
+                   color = "#2E0854", size = 6, fontface = 2) +
+          xlim = c(0,2.5)+
           theme.ggplot
+        
+      } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
+                 input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        
+        p1 <- ggplot()
+        if(input$ancestry == "East Asian"){
+          y_val = 10000
+        } else{
+          y_val = 20000
+        }
+        if (length(table(snp_ra)) > 10) {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+            geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
+            annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
+                     label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim = c(0,2.5)+
+            theme.ggplot
+        } else {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.02) +
+            geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+            geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim = c(0,2.5)+
+            theme.ggplot
+        }
+      }
+    } else{
+      theme.ggplot <- theme(legend.position = "none",
+                        axis.text = element_text(size = 17), axis.title = element_text(size=19), strip.text = element_text(size=20),
+                        panel.background = element_rect(fill = "aliceblue", colour = "grey",
+                        linewidth = 2, linetype = "solid"), panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"), 
+                        axis.title.y = element_text(vjust=1, margin = margin(t=0, r=5, b=0, l=5)),
+                        axis.title.x = element_text(vjust = -.05,margin = margin(t=10, r=0, b=5, l=0)),
+                        panel.grid.minor = element_line(linewidth = 0.25, linetype = 'solid', colour = "grey"),
+                        plot.title = element_blank())
+      if (input$input_range == "Single Marker" && !is.null(input$rs_id) && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        snp_percentile <- ecdf(ra_values)(snp_ra) * 100
+        
+        label_text <- paste0(round(snp_percentile, 2), "%")
+        ggplot() +
+          geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+          geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+          geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+          labs(x = "Relative Accuracy", y = "Frequency") +
+          xlim = c(0,2.5)+
+          annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4, 
+                   label = paste0("Relative Accuracy\nPercentile: ", label_text, sep = ""), 
+                   color = "#2E0854", size = 6, fontface = 2) +
+          theme.ggplot
+        
+      } else if (input$input_range == "Range of Markers (within chromosome)" || input$input_range == "Comma-separated List of SNP RS IDs" || 
+                 input$input_range == "Single Gene" && !is.null(input$ancestry) && !is.null(filtered_hist_data())) {
+        ra_values <- as.numeric(filtered_hist_data()$`Relative Accuracy`)
+        snp_ra <- as.numeric(filtered_snp_data()$`Relative Accuracy`)
+        
+        p1 <- ggplot()
+        if(input$ancestry == "East Asian"){
+          y_val = 10000
+        } else{
+          y_val = 20000
+        }
+        if (length(table(snp_ra)) > 10) {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+            geom_violin(aes(x = snp_ra, y = y_val), fill = "#2E0854", alpha = .35, color = "#2E0854", width = 7500, linewidth = 1.2) +
+            annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 1.4,
+                     label = paste0("Number of SNPs\nin Input: ", length(snp_ra), sep=""), color = "#2E0854", size = 6, fontface = 2) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim = c(0,2.5)+
+            theme.ggplot
+        } else {
+          p1 +
+            geom_histogram(aes(x = ra_values), fill = "skyblue", color = "midnightblue", binwidth = 0.1) +
+            geom_vline(xintercept = snp_ra, color = "white", linewidth = 1.7) +
+            geom_vline(xintercept = snp_ra, color = "#2E0854", linewidth = 1.3) +
+            labs(x = "Relative Accuracy", y = "Frequency") +
+            xlim = c(0,2.5)+
+            theme.ggplot
+        }
       }
     }
   })
