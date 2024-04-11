@@ -124,25 +124,11 @@ PGS_portability_app <- function() {
   # Define the server
   server <- function(input, output, session) {
   
-    read_csv_files <- function(dataset, end) {
-      
-      tmp <- list()
-      for (ancestry in c("af", "cr", "ea", "sa")) {
-        for (i in 1:end) {
-          url <- paste0("https://raw.githubusercontent.com/lupiA/MCANOVA/main/csv_files/MAP_",dataset,"_", 
-                        ancestry, i, ".csv")
-          tmp[[length(tmp) + 1]] <- fread(url, data.table = F)
-        }
-      }
-      dat <- do.call(rbind, tmp)
-      return(dat)
-    }
-  
     dat <- reactive({
       if(input$dataset.input == "UK Biobank Arrays") {
-        dat <- read_csv_files(dataset = "UKB", end = 2)
+        dat <- MCANOVA::MAP_UKB.RData
     } else if(input$dataset.input == "HapMap Variants"){
-        dat <- read_csv_files(dataset = "HM", end = 4)
+        dat <- MCANOVA::MAP_HAPMAP.RData
       }
     })
     
