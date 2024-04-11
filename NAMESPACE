@@ -5,4 +5,5 @@ export(MC_ANOVA,
        )
 data(MAP_HAPMAP.RData,
        MAP_UKB.RData,
-       geno_map_example)
+       geno_map_example
+       )
