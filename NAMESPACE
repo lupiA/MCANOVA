@@ -3,7 +3,3 @@ export(MC_ANOVA,
        getSegments,
        getSegmentsChr
        )
-data(MAP_HAPMAP,
-       MAP_UKB,
-       geno_map_example
-       )
