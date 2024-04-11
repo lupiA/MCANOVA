@@ -92,8 +92,7 @@ PGS_portability_app <- function() {
                tableOutput("table1")
       ),
       fluidRow(width = 10,
-               shinycssloaders::withSpinner(
-               plotOutput("histogram"),type = 5, color ="navy"),
+               plotOutput("histogram"),
                h3("Figure 1:"),
                h5("Relative accuracy distribution. The genome-wide relative accuracy distribution is in blue 
            for the selected target ancestry group. The relative accuracy distribution for the subset 
