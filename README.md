@@ -1,10 +1,4 @@
-# R Shiny app URL
-
-The Relative Accuracy map Shiny app can be run without R software here (note this will run slower than through the MCANOVA package step described below):
-
-[https://lupia.github.io/MCANOVA/](https://lupia.github.io/MCANOVA/).
-
-# MCANOVA Package via R
+# MCANOVA Package
 
 The MC-ANOVA R package provides:
   

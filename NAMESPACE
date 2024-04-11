@@ -1,5 +1,1 @@
-export(MC_ANOVA,
-       PGS_portability_app,
-       getSegments,
-       getSegmentsChr
-       )
+exportPattern("^[[:alpha:]]+")
