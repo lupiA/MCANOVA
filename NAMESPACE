@@ -1,1 +1,10 @@
-exportPattern("^[[:alpha:]]+")
+
+export(MC_ANOVA,
+       PGS_portability_app,
+       getSegments,
+       getSegmentsChr,
+       )
+
+data(MAP_HAPMAP.RData,
+       MAP_UKB.RData,
+       geno_map_example)
