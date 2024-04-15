@@ -4,7 +4,7 @@ The MC-ANOVA R package provides:
   
   - **MC_ANOVA**: A function to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
   - **Maps of the Relative Accuracy** of European-derived local genomic scores for African, Caribbean, East Asian, and South Asian ancestry groups.
-  - **A Shiny App** providing a graphical interface to the Relative Accuracy maps.
+  - **A Shiny App** providing a graphical interface to the Relative Accuracy maps. (A slower but URL acccessible version of the app can be found here: https://lupia.github.io/Cross-Ancestry-Portability/)
   - **Tools** that, together with `MC_ANOVA()` can be used develop Relative Accuracy maps.
 
 ## Installation
