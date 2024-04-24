@@ -1,4 +1,25 @@
-GD.R <- function(XX,Xy,p=ncol(XX),b=rep(0,p), nIter=50,learning_rate=rep(.1,p),lambda=0,b0=rep(0,p),lambda0=1,returnPath=FALSE,map_flag=FALSE){
+#' Runs gradient descent algorithm
+#'
+#' @description This function performs a gradient descent with the option to have SNP-specific learning rates.
+#' 
+#' @param bp ...
+#' base pair position
+#' @param chr ...
+#' chromosome
+#' @param minBPSize ...
+#' minimum base pair size for each segment
+#' @param minSize ...
+#' minimum number of SNPs for each segment
+#' @param firstSegment ...
+#' default 1
+#' @param verbose ...
+#' default FALSE
+#'
+#' @return A numeric vector of segment labels corresponding to each marker
+#'
+#' @export
+
+GD <- function(XX,Xy,p=ncol(XX),b=rep(0,p), nIter=50,learning_rate=rep(.1,p),lambda=0,b0=rep(0,p),lambda0=1,returnPath=FALSE,map_flag=FALSE){
 
     learning_rate=learning_rate/mean(diag(XX))
     LR = rep(NA,p)
