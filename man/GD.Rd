@@ -5,7 +5,7 @@
 This function performs a gradient descent with the option to have SNP-specific learning rates.
 }
 \usage{
-GD(XX,Xy,p=ncol(XX),b=rep(0,p),nIter=50,learning_rate=rep(.1,p),lambda=0,b0=rep(0,p),lambda0=1,returnPath=FALSE,map_flag=FALSE){
+GD(XX,Xy,p=ncol(XX),b=rep(0,p),nIter=50,learning_rate=rep(.1,p),lambda=0,b0=rep(0,p),lambda0=1,returnPath=FALSE,map_flag=FALSE)
 }
 \arguments{
     \item{XX}{lhs}
