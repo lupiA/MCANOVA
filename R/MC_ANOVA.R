@@ -25,7 +25,7 @@
 #'
 #' @export
 
-MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, ...) {
+MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, weights = NULL, ...) {
 
     pop2 <- !is.null(X2)
     if (pop2) {
@@ -67,8 +67,13 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
 
         for (i in 1:nRep) {
             a <- sampler(n = nQTL, ...)
-            cols <- sort(sample(core, size = nQTL))
 
+            if(!is.null(weights)){
+              cols <- sort(sample(core, size = nQTL, prob = weights, replace = FALSE))
+            } else{
+              cols <- sort(sample(core, size = nQTL))
+            }
+            
             rhs <- C[-cols, cols] %*% a
             C11 <- C[-cols, -cols, drop = FALSE]
             C12 <- C[-cols, cols, drop = FALSE]
