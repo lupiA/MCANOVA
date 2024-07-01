@@ -5,7 +5,7 @@
 This function predicts genetic values drawn from the core using SNPs not in the core and those in the core that are not randomly chosen to be QTL
 }
 \usage{
-MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, ...)
+MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sampler = rnorm, weights, ...)
 }
 \arguments{
     \item{X}{genotype matrix for group 1}
@@ -16,6 +16,7 @@ MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sam
     \item{maxRep}{maximum number of MC replicates}
     \item{lambda}{shrinkage parameter}
     \item{sampler}{the function to be used to sample effects}
+    \item{weights}{the SNP-specific weights to sample QTL (length of SNP core)}
 }
 \value{
     A matrix with ancestry groups in the rows, MC-ANOVA correlation estimates in the first column, and Monte Carlo error estimates in the second column
