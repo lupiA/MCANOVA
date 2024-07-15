@@ -96,10 +96,15 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
         }
     }
 
-    ANS <- matrix(nrow = ifelse(pop2, 2, 1), ncol = 2, NA)
+    ANS=matrix(nrow = ifelse(pop2, 2, 1),ncol = 6, NA)
     ANS[, 1] <- colMeans(COR)
-    ANS[, 2] <- sqrt(apply(FUN = var, X = COR, MARGIN = 2) / nrow(COR))
-    colnames(ANS) <- c('Cor', 'MC Error')
+    ANS[, 2] <- apply(FUN = sd, X = COR, MARGIN = 2)
+    ANS[, 3] <- apply(FUN = sd, X = COR^2, MARGIN = 2)
+    ANS[, 4] <- mean(RA.res, na.rm = T)
+    ANS[, 5] <- apply(FUN = sd, X = RA.res, MARGIN = 2)
+    ANS[, 6] <- nrow(COR)
+    colnames(ANS) <- c('Cor', 'Cor_SD', 'Rsq_SD', 'RA','RA_SD','nRep')
+
     if (pop2) {
         rownames(ANS) <- c('Group 1', 'Group 2')
     } else {
