@@ -19,5 +19,5 @@ MC_ANOVA(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda = 1e-8, sam
     \item{weights}{the SNP-specific weights to sample QTL (length of SNP core)}
 }
 \value{
-    A matrix with ancestry groups in the rows, MC-ANOVA correlation estimates in the first column, and Monte Carlo error estimates in the second column
+    A matrix with ancestry groups in the rows
 }
