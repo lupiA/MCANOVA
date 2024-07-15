@@ -20,8 +20,7 @@
 #' @param sampler ...
 #' the function to be used to sample effects
 #'
-#' @return A matrix with ancestry groups in the rows, MC-ANOVA correlation estimates
-#' in the first column, and Monte Carlo error estimates in the second column
+#' @return A matrix with ancestry groups in the rows
 #'
 #' @export
 
