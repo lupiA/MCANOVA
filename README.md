@@ -127,9 +127,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 
 # Initialize portability estimates
  MAP_example$correlation_within <- NA
- MAP_example$correlation_within_SE <- NA
  MAP_example$correlation_across <- NA
- MAP_example$correlation_across_SE <- NA
  MAP_example$R_squared_within <- NA
  MAP_example$R_squared_across <- NA
 
@@ -159,9 +157,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
   
    # Extract portability estimates
    MAP_example$correlation_within[chunk[isCore]] <- out[1, 1]
-   MAP_example$correlation_within_SE[chunk[isCore]] <- out[1, 2]
    MAP_example$correlation_across[chunk[isCore]] <- out[2, 1]
-   MAP_example$correlation_across_SE[chunk[isCore]] <- out[2, 2]
    MAP_example$R_squared_within[chunk[isCore]] <- out[1, 1]^2
    MAP_example$R_squared_across[chunk[isCore]] <- out[2, 1]^2
  }
