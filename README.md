@@ -58,6 +58,9 @@ This package should be compatible with Windows, Mac, and Linux operating systems
 ### Launching the Shiny App
 
 ```r
+ # library(ggplot2)
+ # library(shiny)
+
  library(MCANOVA)
  PGS_portability_app()
 ```
@@ -102,6 +105,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 ```r
 # Load necessary packages
 # install.packages("BGData")
+# library(BGData)
  library(MCANOVA)
  library(BGData)
 
@@ -128,8 +132,6 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
 # Initialize portability estimates
  MAP_example$correlation_within <- NA
  MAP_example$correlation_across <- NA
- MAP_example$R_squared_within <- NA
- MAP_example$R_squared_across <- NA
 
 # Set parameters for MC-ANOVA
 
@@ -158,18 +160,16 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
    # Extract portability estimates
    MAP_example$correlation_within[chunk[isCore]] <- out[1, 1]
    MAP_example$correlation_across[chunk[isCore]] <- out[2, 1]
-   MAP_example$R_squared_within[chunk[isCore]] <- out[1, 1]^2
-   MAP_example$R_squared_across[chunk[isCore]] <- out[2, 1]^2
  }
 
- RA <- MAP_example$R_squared_across/MAP_example$R_squared_within
+ RA <- MAP_example$R_squared_across^2/MAP_example$R_squared_within^2
 ```
 
 [Back](#MENUE)
 
 ### Expected outputs
 
-  - **MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, columns 5 and 6 containing the within-ancestry group `MC_ANOVA()` correlation estimates and standard errors, columns 7 and 8 containing the across-ancestry group `MC_ANOVA()` correlation estimates and standard errors, and columns 9 and 10 containing the within-ancestry and across-ancestry R-squared `MC_ANOVA()` estimates.
+  - **MAP_example**: a 500 x 10 data frame with columns 1-3 containing variant information (chromosome, RS ID, and base pair position), column 4 containing the numeric segment the SNP belongs to estimated from `getSegments()`, column 5 containing the within-ancestry group `MC_ANOVA()` correlation estimates, and columns 6 containing the across-ancestry group `MC_ANOVA()` correlation estimates.
   - **RA**: a length 500 vector of Relative Accuracy estimates.
   - **Interactive shiny app interface.**
 
