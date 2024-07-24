@@ -63,7 +63,8 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
             nRep <- min(maxRep, choose(nCore, nQTL) * 100)
         }
         COR <- matrix(nrow = nRep, ncol = ifelse(pop2, 2, 1), NA)
-
+        RA.res <- c()
+        
         for (i in 1:nRep) {
             a <- sampler(n = nQTL, ...)
 
@@ -92,17 +93,32 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
 
                 COR[i, 2] <- cor(g2, gHat2)
             }
+            RA.res[i] <- COR[i, 2]^2 / COR[i, 1]^2
         }
     }
 
     ANS=matrix(nrow = ifelse(pop2, 2, 1),ncol = 6, NA)
+
+    # Correlation
     ANS[, 1] <- colMeans(COR)
     ANS[, 2] <- apply(FUN = sd, X = COR, MARGIN = 2)
-    ANS[, 3] <- apply(FUN = sd, X = COR^2, MARGIN = 2)
-    ANS[, 4] <- mean(RA.res, na.rm = T)
-    ANS[, 5] <- apply(FUN = sd, X = RA.res, MARGIN = 2)
-    ANS[, 6] <- nrow(COR)
-    colnames(ANS) <- c('Cor', 'Cor_SD', 'Rsq_SD', 'RA','RA_SD','nRep')
+    ANS[, 3] <- sqrt(apply(FUN = var, X = COR, MARGIN = 2) / nrow(COR))
+    
+    # R-sq
+    ANS[, 4] <- colMeans(COR^2)
+    ANS[, 5] <- apply(FUN = sd, X = COR^2, MARGIN = 2)
+    ANS[, 6] <- sqrt(apply(FUN = var, X = COR^2, MARGIN = 2) / nrow(COR))
+    
+    # RA
+    ANS[, 7] <- mean(RA.res, na.rm = T)
+    ANS[, 8] <- apply(FUN = sd, X = RA.res, MARGIN = 2)
+    ANS[, 9] <- sqrt(apply(FUN = var, X = RA.res, MARGIN = 2) / nrow(COR))
+    
+    ANS[, 10] <- nrow(COR)
+    colnames(ANS) <- c('Cor', 'Cor_SD', 'Cor_MC_error', 
+                       'Rsq', 'Rsq_SD', 'Rsq_MC_error',
+                       'RA', 'RA_SD', 'RA_MC_error',
+                       'nRep')
 
     if (pop2) {
         rownames(ANS) <- c('Group 1', 'Group 2')
