@@ -110,9 +110,9 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
     ANS[, 6] <- sqrt(apply(FUN = var, X = COR^2, MARGIN = 2) / nrow(COR))
     
     # RA
-    ANS[, 7] <- mean(RA.res, na.rm = T)
-    ANS[, 8] <- apply(FUN = sd, X = RA.res, MARGIN = 2)
-    ANS[, 9] <- sqrt(apply(FUN = var, X = RA.res, MARGIN = 2) / nrow(COR))
+    ANS[, 7] <- c(1, mean(RA.res, na.rm = T))
+    ANS[, 8] <- c(0, sd(RA.res, na.rm = T))
+    ANS[, 9] <- c(0, sqrt(var(RA.res, na.rm = T) / nrow(COR)))
     
     ANS[, 10] <- nrow(COR)
     colnames(ANS) <- c('Cor', 'Cor_SD', 'Cor_MC_error', 
