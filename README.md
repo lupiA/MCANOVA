@@ -162,7 +162,7 @@ This example requires the R package [BGData](https://github.com/QuantGen/BGData/
    MAP_example$correlation_across[chunk[isCore]] <- out[2, 1]
  }
 
- RA <- MAP_example$R_squared_across^2/MAP_example$R_squared_within^2
+ RA <- MAP_example$correlation_across^2/MAP_example$correlation_within^2
 ```
 
 [Back](#MENUE)
