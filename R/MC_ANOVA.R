@@ -111,8 +111,8 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
     
     # RA
     ANS[, 7] <- c(1, mean(RA.res, na.rm = T))
-    ANS[, 8] <- c(0, sd(RA.res, na.rm = T))
-    ANS[, 9] <- c(0, sqrt(var(RA.res, na.rm = T) / nrow(COR)))
+    ANS[, 8] <- c(NA, sd(RA.res, na.rm = T))
+    ANS[, 9] <- c(NA, sqrt(var(RA.res, na.rm = T) / nrow(COR)))
     
     ANS[, 10] <- nrow(COR)
     colnames(ANS) <- c('Cor', 'Cor_SD', 'Cor_MC_error', 
