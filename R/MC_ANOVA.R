@@ -97,7 +97,7 @@ MC_ANOVA <- function(X, X2 = NULL, core, nQTL, nRep = NULL, maxRep = 300, lambda
         }
     }
 
-    ANS=matrix(nrow = ifelse(pop2, 2, 1),ncol = 6, NA)
+    ANS=matrix(nrow = ifelse(pop2, 2, 1), ncol = 10, NA)
 
     # Correlation
     ANS[, 1] <- colMeans(COR)
