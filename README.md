@@ -7,7 +7,7 @@ The MC-ANOVA R package provides:
   - **A Shiny App** providing a graphical interface to the Relative Accuracy maps. (Note, a slower but URL-acccessible version of the app can be found [here](https://lupia.github.io/Cross-Ancestry-Portability/))
   - **Tools** that, together with `MC_ANOVA()` can be used develop Relative Accuracy maps.
 
-  - [(link to manuscript)](https://doi.org/10.1038/s41467-024-54727-8)
+  - [Link to manuscript](https://doi.org/10.1038/s41467-024-54727-8)
 
 ## Installation
 
