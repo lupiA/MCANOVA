@@ -187,5 +187,5 @@ Imports:
 ### References
 
 - [Wang et al.(Nat. Comm., 2020)](https://www.nature.com/articles/s41467-020-17719-y) Theoretical and empirical quantification of the accuracy of polygenic scores in ancestry divergent populations. 
-- Lupi A., Vazquez A.I., and G. de los Campos (*submitted*). Mapping the Relative Accuracy of Cross-Ancestry Prediction.
+- Lupi, A.S., Vazquez, A.I. & de los Campos, G. Mapping the relative accuracy of cross-ancestry prediction. Nat Commun 15, 10480 (2024). [https://doi.org/10.1038/s41467-024-54727-8](https://doi.org/10.1038/s41467-024-54727-8)
 
