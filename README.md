@@ -1,6 +1,6 @@
 # MCANOVA Package
 
-The MC-ANOVA R package provides:
+The MC-ANOVA [(citation)](https://doi.org/10.1038/s41467-024-54727-8) R package provides:
   
   - **MC_ANOVA**: A function to estimate the Relative Accuracy (RA) of cross-ancestry prediction for short chromosome segments.
   - **Maps of the Relative Accuracy** of European-derived local genomic scores for African, Caribbean, East Asian, and South Asian ancestry groups.
